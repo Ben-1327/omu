@@ -52,11 +52,13 @@ export default function SignUpPage() {
         })
 
         if (result?.error) {
-          setError('登録は完了しましたが、ログインに失敗しました')
+          console.error('Sign in error:', result.error)
+          setError(`登録は完了しましたが、ログインに失敗しました: ${result.error}`)
         } else {
           router.push('/')
         }
       } else {
+        console.error('Registration error:', data)
         setError(data.error || '登録に失敗しました')
       }
     } catch {
