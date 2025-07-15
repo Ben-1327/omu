@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const resolvedParams = await params
     const favorites = await prisma.favorite.findMany({
-      where: { userId: params.id },
+      where: { userId: resolvedParams.id },
       include: {
         post: {
           include: {

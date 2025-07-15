@@ -11,7 +11,20 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0')
 
   try {
-    const where: any = {}
+    const where: {
+      OR?: Array<{
+        title?: { contains: string; mode: 'insensitive' };
+        content?: { contains: string; mode: 'insensitive' };
+      }>;
+      type?: 'article' | 'prompt' | 'conversation';
+      postTags?: {
+        some: {
+          tag: {
+            name: string;
+          };
+        };
+      };
+    } = {}
 
     // テキスト検索
     if (query) {
@@ -23,7 +36,7 @@ export async function GET(request: NextRequest) {
 
     // 投稿タイプフィルター
     if (type && type !== 'all') {
-      where.type = type
+      where.type = type as 'article' | 'prompt' | 'conversation'
     }
 
     // タグフィルター

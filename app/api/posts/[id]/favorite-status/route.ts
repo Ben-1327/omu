@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   
@@ -14,11 +14,12 @@ export async function GET(
   }
 
   try {
+    const resolvedParams = await params
     const favorite = await prisma.favorite.findUnique({
       where: {
         userId_postId: {
           userId: session.user.id,
-          postId: parseInt(params.id)
+          postId: parseInt(resolvedParams.id)
         }
       }
     })

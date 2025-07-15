@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { redirect } from 'next/navigation'
 import PostCard from '@/components/posts/PostCard'
 import { Post, User, Tag } from '@prisma/client'
@@ -29,13 +29,7 @@ export default function ProfilePage() {
     }
   }, [status])
 
-  useEffect(() => {
-    if (session?.user?.id) {
-      fetchUserData()
-    }
-  }, [session])
-
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const [postsResponse, favoritesResponse] = await Promise.all([
         fetch(`/api/users/${session?.user?.id}/posts`),
@@ -53,7 +47,13 @@ export default function ProfilePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [session?.user?.id])
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetchUserData()
+    }
+  }, [session, fetchUserData])
 
   if (status === 'loading' || loading) {
     return (

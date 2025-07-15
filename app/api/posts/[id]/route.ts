@@ -5,11 +5,12 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const resolvedParams = await params
     const post = await prisma.post.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(resolvedParams.id) },
       include: {
         user: {
           select: {
@@ -43,7 +44,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   
@@ -52,12 +53,13 @@ export async function PUT(
   }
 
   try {
+    const resolvedParams = await params
     const body = await request.json()
     const { title, content, platform, tags } = body
 
     // 投稿の存在確認と権限チェック
     const existingPost = await prisma.post.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(resolvedParams.id) },
       include: { user: true }
     })
 
@@ -73,7 +75,7 @@ export async function PUT(
     const updatedPost = await prisma.$transaction(async (prisma) => {
       // 投稿更新
       const post = await prisma.post.update({
-        where: { id: parseInt(params.id) },
+        where: { id: parseInt(resolvedParams.id) },
         data: {
           title,
           content,
@@ -101,7 +103,7 @@ export async function PUT(
 
       // 既存のタグ関連付けを削除
       await prisma.postTag.deleteMany({
-        where: { postId: parseInt(params.id) }
+        where: { postId: parseInt(resolvedParams.id) }
       })
 
       // 新しいタグ処理
@@ -115,7 +117,7 @@ export async function PUT(
 
           await prisma.postTag.create({
             data: {
-              postId: parseInt(params.id),
+              postId: parseInt(resolvedParams.id),
               tagId: tag.id
             }
           })
@@ -134,7 +136,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions)
   
@@ -143,8 +145,9 @@ export async function DELETE(
   }
 
   try {
+    const resolvedParams = await params
     const post = await prisma.post.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(resolvedParams.id) },
       include: { user: true }
     })
 
@@ -157,7 +160,7 @@ export async function DELETE(
     }
 
     await prisma.post.delete({
-      where: { id: parseInt(params.id) }
+      where: { id: parseInt(resolvedParams.id) }
     })
 
     return NextResponse.json({ message: '投稿を削除しました' })

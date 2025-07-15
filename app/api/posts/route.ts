@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const posts = await prisma.post.findMany({
-      where: type ? { type: type as any } : undefined,
+      where: type ? { type: type as 'article' | 'prompt' | 'conversation' } : undefined,
       include: {
         user: {
           select: {

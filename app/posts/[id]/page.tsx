@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { Post, User, Tag } from '@prisma/client'
@@ -24,32 +24,7 @@ export default function PostDetailPage() {
   const [liked, setLiked] = useState(false)
   const [favorited, setFavorited] = useState(false)
 
-  useEffect(() => {
-    if (params.id) {
-      fetchPost()
-    }
-  }, [params.id])
-
-  const fetchPost = async () => {
-    try {
-      const response = await fetch(`/api/posts/${params.id}`)
-      if (response.ok) {
-        const data = await response.json()
-        setPost(data)
-        
-        // いいね・お気に入り状態を確認
-        if (session?.user?.id) {
-          checkLikeAndFavoriteStatus()
-        }
-      }
-    } catch (error) {
-      console.error('投稿取得エラー:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const checkLikeAndFavoriteStatus = async () => {
+  const checkLikeAndFavoriteStatus = useCallback(async () => {
     try {
       const [likeResponse, favoriteResponse] = await Promise.all([
         fetch(`/api/posts/${params.id}/like-status`),
@@ -68,7 +43,32 @@ export default function PostDetailPage() {
     } catch (error) {
       console.error('状態確認エラー:', error)
     }
-  }
+  }, [params.id])
+
+  const fetchPost = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/posts/${params.id}`)
+      if (response.ok) {
+        const data = await response.json()
+        setPost(data)
+        
+        // いいね・お気に入り状態を確認
+        if (session?.user?.id) {
+          checkLikeAndFavoriteStatus()
+        }
+      }
+    } catch (error) {
+      console.error('投稿取得エラー:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [params.id, session?.user?.id, checkLikeAndFavoriteStatus])
+
+  useEffect(() => {
+    if (params.id) {
+      fetchPost()
+    }
+  }, [params.id, fetchPost])
 
   const handleLike = async () => {
     if (!session?.user?.id) return

@@ -59,7 +59,7 @@ export default function SignUpPage() {
       } else {
         setError(data.error || '登録に失敗しました')
       }
-    } catch (error) {
+    } catch {
       setError('登録に失敗しました')
     } finally {
       setLoading(false)
@@ -70,7 +70,7 @@ export default function SignUpPage() {
     setLoading(true)
     try {
       await signIn(provider, { callbackUrl: '/' })
-    } catch (error) {
+    } catch {
       setError('認証に失敗しました')
       setLoading(false)
     }

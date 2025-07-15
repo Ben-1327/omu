@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import PostCard from '@/components/posts/PostCard'
 import { Post, User, Tag } from '@prisma/client'
@@ -23,13 +23,7 @@ export default function SearchPage() {
   const [type, setType] = useState(searchParams.get('type') || 'all')
   const [sort, setSort] = useState(searchParams.get('sort') || 'new')
 
-  useEffect(() => {
-    if (query || type !== 'all') {
-      performSearch()
-    }
-  }, [query, type, sort])
-
-  const performSearch = async () => {
+  const performSearch = useCallback(async () => {
     setLoading(true)
     try {
       const params = new URLSearchParams({
@@ -49,7 +43,13 @@ export default function SearchPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [query, type, sort])
+
+  useEffect(() => {
+    if (query || type !== 'all') {
+      performSearch()
+    }
+  }, [query, type, sort, performSearch])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()

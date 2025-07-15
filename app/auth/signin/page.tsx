@@ -35,7 +35,7 @@ export default function SignInPage() {
           router.push('/')
         }
       }
-    } catch (error) {
+    } catch {
       setError('ログインに失敗しました')
     } finally {
       setLoading(false)
@@ -46,7 +46,7 @@ export default function SignInPage() {
     setLoading(true)
     try {
       await signIn(provider, { callbackUrl: '/' })
-    } catch (error) {
+    } catch {
       setError('認証に失敗しました')
       setLoading(false)
     }
