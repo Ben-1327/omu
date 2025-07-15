@@ -24,7 +24,7 @@ omuは生成AIのプロンプト、記事、会話履歴を共有するQiita風�
 
 1. **リポジトリのクローン**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Ben-1327/omu.git
    cd omu
    ```
 
