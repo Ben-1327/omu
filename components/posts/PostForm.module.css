@@ -1,0 +1,374 @@
+/* PostForm.module.css */
+
+.container {
+  width: 100%;
+  margin: 0;
+  padding: 2rem 2rem;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    padding: 2rem 4rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .container {
+    padding: 2rem 6rem;
+  }
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.loginPrompt {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.loginPrompt p {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.form {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+}
+
+.characterCount {
+  font-size: 0.875rem;
+  color: #718096;
+  font-weight: 400;
+}
+
+/* Type Selector Styles */
+.typeSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.typeCard {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.typeCard:hover {
+  border-color: #3182ce;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.typeCardActive {
+  border-color: #3182ce;
+  background: #ebf8ff;
+  box-shadow: 0 0 0 1px #3182ce;
+}
+
+.typeIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.typeLabel {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+.typeDescription {
+  font-size: 0.875rem;
+  color: #718096;
+  line-height: 1.4;
+}
+
+/* Input Styles */
+.titleInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #2d3748;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.titleInput::placeholder {
+  color: #a0aec0;
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #2d3748;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+/* Editor Header */
+.editorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.editorModeToggle {
+  display: flex;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.modeButton {
+  padding: 0.5rem 1rem;
+  background: white;
+  color: #4a5568;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  border-right: 1px solid #e2e8f0;
+}
+
+.modeButton:last-child {
+  border-right: none;
+}
+
+.modeButton:hover {
+  background: #f7fafc;
+}
+
+.modeButtonActive {
+  background: #3182ce;
+  color: white;
+}
+
+.modeButtonActive:hover {
+  background: #2c5282;
+}
+
+/* Editor Container */
+.editorContainer {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+  min-height: 600px;
+}
+
+.editorContainer:focus-within {
+  border-color: #3182ce;
+}
+
+/* エディタ内のスタイル統一 */
+.editorContainer :global(.w-md-editor) {
+  background-color: #ffffff !important;
+}
+
+.editorContainer :global(.w-md-editor-text-pre) {
+  background-color: #ffffff !important;
+  color: #2d3748 !important;
+}
+
+.editorContainer :global(.w-md-editor-text) {
+  background-color: #ffffff !important;
+  color: #2d3748 !important;
+}
+
+.editorContainer :global(.w-md-editor-preview) {
+  background-color: #ffffff !important;
+  color: #2d3748 !important;
+}
+
+.editorContainer :global(.wmde-markdown) {
+  background-color: #ffffff !important;
+  color: #2d3748 !important;
+}
+
+/* Markdownプレビューのリストスタイルを修正 */
+.editorContainer :global(.wmde-markdown ul) {
+  list-style-type: disc !important;
+  margin-left: 1.5rem !important;
+  padding-left: 0 !important;
+}
+
+.editorContainer :global(.wmde-markdown ol) {
+  list-style-type: decimal !important;
+  margin-left: 1.5rem !important;
+  padding-left: 0 !important;
+}
+
+.editorContainer :global(.wmde-markdown li) {
+  display: list-item !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.editorContainer :global(.w-md-editor-preview ul) {
+  list-style-type: disc !important;
+  margin-left: 1.5rem !important;
+  padding-left: 0 !important;
+}
+
+.editorContainer :global(.w-md-editor-preview ol) {
+  list-style-type: decimal !important;
+  margin-left: 1.5rem !important;
+  padding-left: 0 !important;
+}
+
+.editorContainer :global(.w-md-editor-preview li) {
+  display: list-item !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Submit Section */
+.submitSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitButton {
+  padding: 0.75rem 2rem;
+  background: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #2c5282;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.4);
+}
+
+.submitButton:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    width: 100%;
+  }
+  
+  .form {
+    padding: 1.5rem;
+  }
+  
+  .typeSelector {
+    grid-template-columns: 1fr;
+  }
+  
+  .typeCard {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .titleInput {
+    font-size: 1rem;
+  }
+  
+  .editorModeToggle {
+    flex-direction: column;
+  }
+  
+  .modeButton {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .modeButton:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  .form {
+    padding: 1rem;
+  }
+  
+  .editorContainer {
+    min-height: 400px;
+  }
+}

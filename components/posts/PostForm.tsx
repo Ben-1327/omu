@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import TagInput from '@/components/ui/TagInput'
+import styles from './PostForm.module.css'
 
 // Markdownエディタを動的インポート（SSR対応）
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -32,6 +33,7 @@ export default function PostForm() {
   })
   
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [previewMode, setPreviewMode] = useState<'edit' | 'preview' | 'live'>('live')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,37 +69,41 @@ export default function PostForm() {
 
   if (!session) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <p className="text-center text-gray-600">投稿するにはログインしてください。</p>
+      <div className={styles.container}>
+        <div className={styles.loginPrompt}>
+          <p>投稿するにはログインしてください。</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">新規投稿</h1>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>新規投稿</h1>
+      </div>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className={styles.form}>
         {/* タイプ選択 */}
-        <div>
-          <label className="block text-sm font-medium mb-2">投稿タイプ</label>
-          <div className="flex space-x-4">
+        <div className={styles.section}>
+          <label className={styles.sectionLabel}>投稿タイプ</label>
+          <div className={styles.typeSelector}>
             {[
-              { value: 'article', label: '記事' },
-              { value: 'prompt', label: 'プロンプト' },
-              { value: 'conversation', label: '会話' }
-            ].map(({ value, label }) => (
+              { value: 'article', label: '記事', icon: '📝', description: '技術記事やノウハウを共有' },
+              { value: 'prompt', label: 'プロンプト', icon: '🤖', description: 'AI用プロンプトを共有' },
+              { value: 'conversation', label: '会話', icon: '💬', description: 'AIとの会話を共有' }
+            ].map(({ value, label, icon, description }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, type: value as PostType }))}
-                className={`px-4 py-2 rounded-md border ${
-                  formData.type === value
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                className={`${styles.typeCard} ${
+                  formData.type === value ? styles.typeCardActive : ''
                 }`}
               >
-                {label}
+                <div className={styles.typeIcon}>{icon}</div>
+                <div className={styles.typeLabel}>{label}</div>
+                <div className={styles.typeDescription}>{description}</div>
               </button>
             ))}
           </div>
@@ -105,12 +111,12 @@ export default function PostForm() {
 
         {/* プラットフォーム選択（会話の場合のみ） */}
         {formData.type === 'conversation' && (
-          <div>
-            <label className="block text-sm font-medium mb-2">プラットフォーム</label>
+          <div className={styles.section}>
+            <label className={styles.sectionLabel}>プラットフォーム</label>
             <select
               value={formData.platform}
               onChange={(e) => setFormData(prev => ({ ...prev, platform: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={styles.select}
               required
             >
               <option value="">選択してください</option>
@@ -123,13 +129,18 @@ export default function PostForm() {
         )}
 
         {/* タイトル */}
-        <div>
-          <label className="block text-sm font-medium mb-2">タイトル</label>
+        <div className={styles.section}>
+          <label className={styles.sectionLabel}>
+            タイトル
+            <span className={styles.characterCount}>
+              {formData.title.length}/100
+            </span>
+          </label>
           <input
             type="text"
             value={formData.title}
             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={styles.titleInput}
             placeholder="タイトルを入力してください"
             maxLength={100}
             required
@@ -137,21 +148,55 @@ export default function PostForm() {
         </div>
 
         {/* 本文 */}
-        <div>
-          <label className="block text-sm font-medium mb-2">本文</label>
-          <div data-color-mode="light">
+        <div className={styles.section}>
+          <div className={styles.editorHeader}>
+            <label className={styles.sectionLabel}>
+              本文
+              <span className={styles.characterCount}>
+                {formData.content.length} 文字
+              </span>
+            </label>
+            <div className={styles.editorModeToggle}>
+              <button
+                type="button"
+                onClick={() => setPreviewMode('edit')}
+                className={`${styles.modeButton} ${previewMode === 'edit' ? styles.modeButtonActive : ''}`}
+              >
+                編集
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewMode('live')}
+                className={`${styles.modeButton} ${previewMode === 'live' ? styles.modeButtonActive : ''}`}
+              >
+                プレビュー
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewMode('preview')}
+                className={`${styles.modeButton} ${previewMode === 'preview' ? styles.modeButtonActive : ''}`}
+              >
+                プレビューのみ
+              </button>
+            </div>
+          </div>
+          <div className={styles.editorContainer} data-color-mode="light">
             <MDEditor
               value={formData.content}
               onChange={(value) => setFormData(prev => ({ ...prev, content: value || '' }))}
-              preview="edit"
-              height={400}
-              visibleDragBar={false}
+              preview={previewMode}
+              height={600}
+              hideToolbar
               textareaProps={{
                 placeholder: 'Markdownで記述してください',
                 style: {
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                  fontFamily: 'monospace',
+                  fontSize: 16,
+                  lineHeight: 1.6,
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  backgroundColor: '#ffffff',
+                  color: '#2d3748',
+                  border: 'none',
+                  outline: 'none',
                 },
               }}
             />
@@ -159,8 +204,8 @@ export default function PostForm() {
         </div>
 
         {/* タグ */}
-        <div>
-          <label className="block text-sm font-medium mb-2">タグ（最大5個）</label>
+        <div className={styles.section}>
+          <label className={styles.sectionLabel}>タグ（最大5個）</label>
           <TagInput
             tags={formData.tags}
             onTagsChange={handleTagsChange}
@@ -170,11 +215,11 @@ export default function PostForm() {
         </div>
 
         {/* 送信ボタン */}
-        <div className="flex justify-end">
+        <div className={styles.submitSection}>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className={styles.submitButton}
           >
             {isSubmitting ? '投稿中...' : '投稿する'}
           </button>

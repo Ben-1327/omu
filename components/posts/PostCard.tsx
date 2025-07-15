@@ -55,7 +55,7 @@ export default function PostCard({ post }: PostCardProps) {
             )}
           </div>
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            {post.createdAt.toLocaleDateString('ja-JP')}
+            {new Date(post.createdAt).toLocaleDateString('ja-JP')}
           </span>
         </div>
 
