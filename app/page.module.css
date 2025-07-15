@@ -1,15 +1,16 @@
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
 
 .header {
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .title {
-  font-size: 1.875rem;
+  font-size: 2.25rem;
   font-weight: 700;
   color: #111827;
   margin-bottom: 0.5rem;
@@ -17,12 +18,47 @@
 
 .subtitle {
   color: #6b7280;
+  font-size: 1.125rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.sliderSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.gridSection {
+  margin-top: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    text-align: left;
+  }
+  
+  .sectionTitle {
+    text-align: left;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -44,5 +80,9 @@
   
   .subtitle {
     color: #9ca3af;
+  }
+  
+  .sectionTitle {
+    color: #ffffff;
   }
 }

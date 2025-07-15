@@ -1,0 +1,36 @@
+.followButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.followButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.notFollowing {
+  background-color: #2563eb;
+  color: white;
+}
+
+.notFollowing:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.following {
+  background-color: #6b7280;
+  color: white;
+}
+
+.following:hover:not(:disabled) {
+  background-color: #ef4444;
+}
+
+.following:hover:not(:disabled)::after {
+  content: '解除';
+}

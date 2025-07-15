@@ -21,7 +21,9 @@ export default function ProfilePage() {
   const { data: session, status } = useSession()
   const [posts, setPosts] = useState<PostWithDetails[]>([])
   const [favorites, setFavorites] = useState<PostWithDetails[]>([])
-  const [activeTab, setActiveTab] = useState<'posts' | 'favorites'>('posts')
+  const [followers, setFollowers] = useState<any[]>([])
+  const [following, setFollowing] = useState<any[]>([])
+  const [activeTab, setActiveTab] = useState<'posts' | 'favorites' | 'followers' | 'following'>('posts')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -32,16 +34,22 @@ export default function ProfilePage() {
 
   const fetchUserData = useCallback(async () => {
     try {
-      const [postsResponse, favoritesResponse] = await Promise.all([
+      const [postsResponse, favoritesResponse, followersResponse, followingResponse] = await Promise.all([
         fetch(`/api/users/${session?.user?.id}/posts`),
-        fetch(`/api/users/${session?.user?.id}/favorites`)
+        fetch(`/api/users/${session?.user?.id}/favorites`),
+        fetch(`/api/users/${session?.user?.id}/followers`),
+        fetch(`/api/users/${session?.user?.id}/following`)
       ])
 
-      if (postsResponse.ok && favoritesResponse.ok) {
+      if (postsResponse.ok && favoritesResponse.ok && followersResponse.ok && followingResponse.ok) {
         const postsData = await postsResponse.json()
         const favoritesData = await favoritesResponse.json()
+        const followersData = await followersResponse.json()
+        const followingData = await followingResponse.json()
         setPosts(postsData)
         setFavorites(favoritesData)
+        setFollowers(followersData)
+        setFollowing(followingData)
       }
     } catch (error) {
       console.error('データ取得エラー:', error)
@@ -96,8 +104,12 @@ export default function ProfilePage() {
             <div className={styles.statLabel}>お気に入り</div>
           </div>
           <div className={styles.statItem}>
-            <div className={styles.statNumber}>0</div>
+            <div className={styles.statNumber}>{followers.length}</div>
             <div className={styles.statLabel}>フォロワー</div>
+          </div>
+          <div className={styles.statItem}>
+            <div className={styles.statNumber}>{following.length}</div>
+            <div className={styles.statLabel}>フォロイング</div>
           </div>
         </div>
       </div>
@@ -120,6 +132,22 @@ export default function ProfilePage() {
           >
             お気に入り ({favorites.length})
           </button>
+          <button
+            onClick={() => setActiveTab('followers')}
+            className={`${styles.tab} ${
+              activeTab === 'followers' ? styles.tabActive : styles.tabInactive
+            }`}
+          >
+            フォロワー ({followers.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('following')}
+            className={`${styles.tab} ${
+              activeTab === 'following' ? styles.tabActive : styles.tabInactive
+            }`}
+          >
+            フォロイング ({following.length})
+          </button>
         </div>
       </div>
 
@@ -134,7 +162,7 @@ export default function ProfilePage() {
               <p className={styles.emptyText}>まだ投稿がありません。</p>
             </div>
           )
-        ) : (
+        ) : activeTab === 'favorites' ? (
           favorites.length > 0 ? (
             favorites.map((post) => (
               <PostCard key={post.id} post={post} />
@@ -142,6 +170,46 @@ export default function ProfilePage() {
           ) : (
             <div className={styles.emptyState}>
               <p className={styles.emptyText}>お気に入りがありません。</p>
+            </div>
+          )
+        ) : activeTab === 'followers' ? (
+          followers.length > 0 ? (
+            followers.map((user) => (
+              <div key={user.id} className={styles.userCard}>
+                <div className={styles.userInfo}>
+                  <div className={styles.userAvatar}>
+                    {user.username[0]?.toUpperCase()}
+                  </div>
+                  <div>
+                    <div className={styles.userName}>{user.username}</div>
+                    <div className={styles.userEmail}>{user.email}</div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>フォロワーがいません。</p>
+            </div>
+          )
+        ) : (
+          following.length > 0 ? (
+            following.map((user) => (
+              <div key={user.id} className={styles.userCard}>
+                <div className={styles.userInfo}>
+                  <div className={styles.userAvatar}>
+                    {user.username[0]?.toUpperCase()}
+                  </div>
+                  <div>
+                    <div className={styles.userName}>{user.username}</div>
+                    <div className={styles.userEmail}>{user.email}</div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>フォロイングがいません。</p>
             </div>
           )
         )}

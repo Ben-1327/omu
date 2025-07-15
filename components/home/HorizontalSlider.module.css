@@ -1,0 +1,191 @@
+.container {
+  margin-bottom: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.scrollButton {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: white;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.scrollButton:hover:not(.disabled) {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.scrollButton.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.scrollContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 0.5rem;
+}
+
+.slider::-webkit-scrollbar {
+  display: none;
+}
+
+.slideItem {
+  flex: 0 0 300px;
+  min-width: 300px;
+}
+
+.loadingCard {
+  flex: 0 0 300px;
+  min-width: 300px;
+  height: 200px;
+  background: white;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  padding: 1rem;
+  animation: pulse 2s infinite;
+}
+
+.loadingHeader {
+  height: 1rem;
+  background: #e5e7eb;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  width: 60%;
+}
+
+.loadingContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.loadingLine {
+  height: 0.75rem;
+  background: #e5e7eb;
+  border-radius: 0.25rem;
+  width: 100%;
+}
+
+.loadingLineShort {
+  height: 0.75rem;
+  background: #e5e7eb;
+  border-radius: 0.25rem;
+  width: 70%;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+  background: white;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .slideItem {
+    flex: 0 0 280px;
+    min-width: 280px;
+  }
+  
+  .loadingCard {
+    flex: 0 0 280px;
+    min-width: 280px;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+  }
+  
+  .controls {
+    gap: 0.25rem;
+  }
+  
+  .scrollButton {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: #ffffff;
+  }
+  
+  .scrollButton {
+    background: #374151;
+    color: #d1d5db;
+    border-color: #4b5563;
+  }
+  
+  .scrollButton:hover:not(.disabled) {
+    background: #4b5563;
+    border-color: #6b7280;
+  }
+  
+  .loadingCard {
+    background: #374151;
+    border-color: #4b5563;
+  }
+  
+  .loadingHeader,
+  .loadingLine,
+  .loadingLineShort {
+    background: #4b5563;
+  }
+  
+  .emptyState {
+    background: #374151;
+    border-color: #4b5563;
+    color: #9ca3af;
+  }
+}

@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { Post, User, Tag } from '@prisma/client'
 import ReactMarkdown from 'react-markdown'
+import TwitterShareButton from '@/components/ui/TwitterShareButton'
 import styles from './post-detail.module.css'
 
 type PostWithDetails = Post & {
@@ -19,11 +20,17 @@ type PostWithDetails = Post & {
 
 export default function PostDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const { data: session } = useSession()
   const [post, setPost] = useState<PostWithDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [liked, setLiked] = useState(false)
   const [favorited, setFavorited] = useState(false)
+  const [currentUrl, setCurrentUrl] = useState('')
+
+  useEffect(() => {
+    setCurrentUrl(window.location.origin)
+  }, [])
 
   const checkLikeAndFavoriteStatus = useCallback(async () => {
     try {
@@ -121,6 +128,36 @@ export default function PostDetailPage() {
       }
     } catch (error) {
       console.error('お気に入りエラー:', error)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!session?.user?.id || !post) return
+
+    // 権限チェック
+    if (post.userId !== session.user.id && !session.user.isAdmin) {
+      alert('削除権限がありません')
+      return
+    }
+
+    if (!confirm('本当にこの投稿を削除しますか？この操作は取り消せません。')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/posts/${params.id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        router.push('/')
+      } else {
+        const data = await response.json()
+        alert(data.error || '削除に失敗しました')
+      }
+    } catch (error) {
+      console.error('削除エラー:', error)
+      alert('削除に失敗しました')
     }
   }
 
@@ -222,6 +259,14 @@ export default function PostDetailPage() {
               </button>
             </div>
           )}
+          
+          {/* Twitterシェアボタン */}
+          {currentUrl && (
+            <TwitterShareButton
+              url={`${currentUrl}/posts/${post.id}`}
+              text={`${post.title} | omu`}
+            />
+          )}
         </div>
 
         <div className={styles.content}>
@@ -243,10 +288,16 @@ export default function PostDetailPage() {
       {session?.user?.id && (session.user.id === post.userId || session.user.isAdmin) && (
         <div className={styles.adminActions}>
           <div className={styles.adminActionButtons}>
-            <button className={styles.editButton}>
+            <button 
+              onClick={() => router.push(`/posts/${post.id}/edit`)}
+              className={styles.editButton}
+            >
               編集
             </button>
-            <button className={styles.deleteButton}>
+            <button 
+              onClick={handleDelete}
+              className={styles.deleteButton}
+            >
               削除
             </button>
           </div>

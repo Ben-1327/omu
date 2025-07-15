@@ -3,6 +3,11 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+import TagInput from '@/components/ui/TagInput'
+
+// Markdownエディタを動的インポート（SSR対応）
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
 type PostType = 'article' | 'prompt' | 'conversation'
 
@@ -26,7 +31,6 @@ export default function PostForm() {
     tags: []
   })
   
-  const [tagInput, setTagInput] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,20 +58,10 @@ export default function PostForm() {
     }
   }
 
-  const addTag = () => {
-    if (tagInput.trim() && !formData.tags.includes(tagInput.trim()) && formData.tags.length < 5) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...prev.tags, tagInput.trim()]
-      }))
-      setTagInput('')
-    }
-  }
-
-  const removeTag = (tagToRemove: string) => {
+  const handleTagsChange = (tags: string[]) => {
     setFormData(prev => ({
       ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
+      tags
     }))
   }
 
@@ -145,55 +139,34 @@ export default function PostForm() {
         {/* 本文 */}
         <div>
           <label className="block text-sm font-medium mb-2">本文</label>
-          <textarea
-            value={formData.content}
-            onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-64"
-            placeholder="Markdownで記述してください"
-            maxLength={10000}
-            required
-          />
+          <div data-color-mode="light">
+            <MDEditor
+              value={formData.content}
+              onChange={(value) => setFormData(prev => ({ ...prev, content: value || '' }))}
+              preview="edit"
+              height={400}
+              visibleDragBar={false}
+              textareaProps={{
+                placeholder: 'Markdownで記述してください',
+                style: {
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                  fontFamily: 'monospace',
+                },
+              }}
+            />
+          </div>
         </div>
 
         {/* タグ */}
         <div>
           <label className="block text-sm font-medium mb-2">タグ（最大5個）</label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {formData.tags.map(tag => (
-              <span
-                key={tag}
-                className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm flex items-center"
-              >
-                {tag}
-                <button
-                  type="button"
-                  onClick={() => removeTag(tag)}
-                  className="ml-1 text-blue-600 hover:text-blue-800"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-          </div>
-          <div className="flex">
-            <input
-              type="text"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="タグを入力してください"
-              disabled={formData.tags.length >= 5}
-            />
-            <button
-              type="button"
-              onClick={addTag}
-              disabled={formData.tags.length >= 5}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-r-md hover:bg-gray-300 disabled:opacity-50"
-            >
-              追加
-            </button>
-          </div>
+          <TagInput
+            tags={formData.tags}
+            onTagsChange={handleTagsChange}
+            maxTags={5}
+            placeholder="タグを入力してください"
+          />
         </div>
 
         {/* 送信ボタン */}
