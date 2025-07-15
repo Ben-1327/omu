@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { redirect } from 'next/navigation'
 import PostCard from '@/components/posts/PostCard'
 import { Post, User, Tag } from '@prisma/client'
+import styles from './profile.module.css'
 
 type PostWithDetails = Post & {
   user: User
@@ -57,8 +58,8 @@ export default function ProfilePage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">読み込み中...</div>
+      <div className={styles.container}>
+        <div className={styles.loading}>読み込み中...</div>
       </div>
     )
   }
@@ -68,57 +69,53 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div className="flex items-center space-x-4">
-          <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+    <div className={styles.container}>
+      <div className={styles.profileCard}>
+        <div className={styles.profileHeader}>
+          <div className={styles.avatar}>
             {session.user.name?.[0]?.toUpperCase() || 'U'}
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">{session.user.name}</h1>
-            <p className="text-gray-600">{session.user.email}</p>
+          <div className={styles.profileInfo}>
+            <h1 className={styles.profileName}>{session.user.name}</h1>
+            <p className={styles.profileEmail}>{session.user.email}</p>
             {session.user.isAdmin && (
-              <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mt-2">
+              <span className={styles.adminBadge}>
                 管理者
               </span>
             )}
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-2xl font-bold text-gray-900">{posts.length}</div>
-            <div className="text-gray-600">投稿</div>
+        <div className={styles.statsGrid}>
+          <div className={styles.statItem}>
+            <div className={styles.statNumber}>{posts.length}</div>
+            <div className={styles.statLabel}>投稿</div>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-gray-900">{favorites.length}</div>
-            <div className="text-gray-600">お気に入り</div>
+          <div className={styles.statItem}>
+            <div className={styles.statNumber}>{favorites.length}</div>
+            <div className={styles.statLabel}>お気に入り</div>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-gray-900">0</div>
-            <div className="text-gray-600">フォロワー</div>
+          <div className={styles.statItem}>
+            <div className={styles.statNumber}>0</div>
+            <div className={styles.statLabel}>フォロワー</div>
           </div>
         </div>
       </div>
 
-      <div className="mb-6">
-        <div className="flex space-x-4 border-b">
+      <div className={styles.tabContainer}>
+        <div className={styles.tabList}>
           <button
             onClick={() => setActiveTab('posts')}
-            className={`px-4 py-2 font-medium ${
-              activeTab === 'posts'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+            className={`${styles.tab} ${
+              activeTab === 'posts' ? styles.tabActive : styles.tabInactive
             }`}
           >
             投稿 ({posts.length})
           </button>
           <button
             onClick={() => setActiveTab('favorites')}
-            className={`px-4 py-2 font-medium ${
-              activeTab === 'favorites'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+            className={`${styles.tab} ${
+              activeTab === 'favorites' ? styles.tabActive : styles.tabInactive
             }`}
           >
             お気に入り ({favorites.length})
@@ -126,15 +123,15 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
+      <div className={styles.contentGrid}>
         {activeTab === 'posts' ? (
           posts.length > 0 ? (
             posts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))
           ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-600">まだ投稿がありません。</p>
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>まだ投稿がありません。</p>
             </div>
           )
         ) : (
@@ -143,8 +140,8 @@ export default function ProfilePage() {
               <PostCard key={post.id} post={post} />
             ))
           ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-600">お気に入りがありません。</p>
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>お気に入りがありません。</p>
             </div>
           )
         )}

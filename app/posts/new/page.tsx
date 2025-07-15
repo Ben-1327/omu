@@ -1,8 +1,9 @@
 import PostForm from '@/components/posts/PostForm'
+import styles from './new-post.module.css'
 
 export default function NewPostPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className={styles.container}>
       <PostForm />
     </div>
   )

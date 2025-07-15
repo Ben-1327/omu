@@ -5,6 +5,8 @@ import GitHubProvider from 'next-auth/providers/github'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { prisma } from './prisma'
 import bcrypt from 'bcryptjs'
+import type { JWT } from 'next-auth/jwt'
+import type { Session } from 'next-auth'
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -59,16 +61,16 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.isAdmin = user.isAdmin
+    async jwt({ token, user }: { token: JWT; user?: unknown }) {
+      if (user && typeof user === 'object' && user !== null) {
+        token.isAdmin = (user as { isAdmin?: boolean }).isAdmin
       }
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token?: JWT }) {
       if (token) {
-        session.user.id = token.sub
-        session.user.isAdmin = token.isAdmin
+        (session.user as { id: string; isAdmin: boolean }).id = token.sub as string
+        (session.user as { id: string; isAdmin: boolean }).isAdmin = token.isAdmin as boolean
       }
       return session
     },

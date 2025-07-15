@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { Post, User, Tag } from '@prisma/client'
 import ReactMarkdown from 'react-markdown'
+import styles from './post-detail.module.css'
 
 type PostWithDetails = Post & {
   user: User
@@ -139,73 +140,71 @@ export default function PostDetailPage() {
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'article':
-        return 'bg-blue-100 text-blue-800'
+        return styles.typeArticle
       case 'prompt':
-        return 'bg-green-100 text-green-800'
+        return styles.typePrompt
       case 'conversation':
-        return 'bg-purple-100 text-purple-800'
+        return styles.typeConversation
       default:
-        return 'bg-gray-100 text-gray-800'
+        return styles.typeDefault
     }
   }
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">読み込み中...</div>
+      <div className={styles.container}>
+        <div className={styles.loading}>読み込み中...</div>
       </div>
     )
   }
 
   if (!post) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">投稿が見つかりません</div>
+      <div className={styles.container}>
+        <div className={styles.loading}>投稿が見つかりません</div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <article className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(post.type)}`}>
+    <div className={styles.container}>
+      <article className={styles.article}>
+        <div className={styles.header}>
+          <div className={styles.headerLeft}>
+            <span className={`${styles.typeLabel} ${getTypeColor(post.type)}`}>
               {getTypeLabel(post.type)}
             </span>
             {post.platform && (
-              <span className="text-sm text-gray-500">
+              <span className={styles.platform}>
                 {post.platform}
               </span>
             )}
           </div>
-          <span className="text-sm text-gray-500">
+          <span className={styles.date}>
             {new Date(post.createdAt).toLocaleDateString('ja-JP')}
           </span>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <h1 className={styles.title}>
           {post.title}
         </h1>
 
-        <div className="flex items-center space-x-4 mb-6">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+        <div className={styles.userInfo}>
+          <div className={styles.userDetails}>
+            <div className={styles.avatar}>
               {post.user.username[0]?.toUpperCase()}
             </div>
-            <span className="text-sm text-gray-700">
+            <span className={styles.username}>
               {post.user.username}
             </span>
           </div>
           
           {session?.user?.id && (
-            <div className="flex items-center space-x-2">
+            <div className={styles.actions}>
               <button
                 onClick={handleLike}
-                className={`flex items-center space-x-1 px-3 py-1 rounded-full text-sm ${
-                  liked 
-                    ? 'bg-red-100 text-red-700' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                className={`${styles.actionButton} ${styles.likeButton} ${
+                  liked ? styles.likeButtonActive : ''
                 }`}
               >
                 <span>♥</span>
@@ -214,10 +213,8 @@ export default function PostDetailPage() {
               
               <button
                 onClick={handleFavorite}
-                className={`flex items-center space-x-1 px-3 py-1 rounded-full text-sm ${
-                  favorited 
-                    ? 'bg-yellow-100 text-yellow-700' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                className={`${styles.actionButton} ${styles.favoriteButton} ${
+                  favorited ? styles.favoriteButtonActive : ''
                 }`}
               >
                 <span>★</span>
@@ -227,15 +224,15 @@ export default function PostDetailPage() {
           )}
         </div>
 
-        <div className="prose prose-lg max-w-none mb-6">
+        <div className={styles.content}>
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className={styles.tags}>
           {post.postTags.map(({ tag }) => (
             <span
               key={tag.id}
-              className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+              className={styles.tag}
             >
               #{tag.name}
             </span>
@@ -244,12 +241,12 @@ export default function PostDetailPage() {
       </article>
 
       {session?.user?.id && (session.user.id === post.userId || session.user.isAdmin) && (
-        <div className="bg-white rounded-lg shadow-md p-4">
-          <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+        <div className={styles.adminActions}>
+          <div className={styles.adminActionButtons}>
+            <button className={styles.editButton}>
               編集
             </button>
-            <button className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+            <button className={styles.deleteButton}>
               削除
             </button>
           </div>

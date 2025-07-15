@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { redirect } from 'next/navigation'
+import styles from './admin.module.css'
 
 interface User {
   id: number
@@ -99,8 +100,8 @@ export default function AdminPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">読み込み中...</div>
+      <div className={styles.container}>
+        <div className={styles.loading}>読み込み中...</div>
       </div>
     )
   }
@@ -110,27 +111,23 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">管理者ダッシュボード</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>管理者ダッシュボード</h1>
 
-      <div className="mb-6">
-        <div className="flex space-x-4 border-b">
+      <div className={styles.tabContainer}>
+        <div className={styles.tabList}>
           <button
             onClick={() => setActiveTab('users')}
-            className={`px-4 py-2 font-medium ${
-              activeTab === 'users'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+            className={`${styles.tab} ${
+              activeTab === 'users' ? styles.tabActive : styles.tabInactive
             }`}
           >
             ユーザー管理
           </button>
           <button
             onClick={() => setActiveTab('posts')}
-            className={`px-4 py-2 font-medium ${
-              activeTab === 'posts'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+            className={`${styles.tab} ${
+              activeTab === 'posts' ? styles.tabActive : styles.tabInactive
             }`}
           >
             投稿管理
@@ -139,57 +136,39 @@ export default function AdminPage() {
       </div>
 
       {activeTab === 'users' && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="px-6 py-4 border-b">
-            <h2 className="text-xl font-semibold">ユーザー一覧</h2>
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>ユーザー一覧</h2>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead className={styles.tableHeader}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ユーザー名
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    メールアドレス
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    管理者
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    登録日
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    操作
-                  </th>
+                  <th className={styles.tableHeaderCell}>ID</th>
+                  <th className={styles.tableHeaderCell}>ユーザー名</th>
+                  <th className={styles.tableHeaderCell}>メールアドレス</th>
+                  <th className={styles.tableHeaderCell}>管理者</th>
+                  <th className={styles.tableHeaderCell}>登録日</th>
+                  <th className={styles.tableHeaderCell}>操作</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className={styles.tableBody}>
                 {users.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {user.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {user.username}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {user.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <tr key={user.id} className={styles.tableRow}>
+                    <td className={styles.tableCell}>{user.id}</td>
+                    <td className={styles.tableCell}>{user.username}</td>
+                    <td className={styles.tableCell}>{user.email}</td>
+                    <td className={styles.tableCell}>
                       {user.isAdmin ? '管理者' : '一般'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className={styles.tableCell}>
                       {new Date(user.createdAt).toLocaleDateString('ja-JP')}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className={styles.tableCell}>
                       {!user.isAdmin && (
                         <button
                           onClick={() => deleteUser(user.id)}
-                          className="text-red-600 hover:text-red-900"
+                          className={styles.deleteButton}
                         >
                           削除
                         </button>
@@ -204,56 +183,36 @@ export default function AdminPage() {
       )}
 
       {activeTab === 'posts' && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="px-6 py-4 border-b">
-            <h2 className="text-xl font-semibold">投稿一覧</h2>
+        <div className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>投稿一覧</h2>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className={styles.tableContainer}>
+            <table className={styles.table}>
+              <thead className={styles.tableHeader}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    タイトル
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    タイプ
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    投稿者
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    投稿日
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    操作
-                  </th>
+                  <th className={styles.tableHeaderCell}>ID</th>
+                  <th className={styles.tableHeaderCell}>タイトル</th>
+                  <th className={styles.tableHeaderCell}>タイプ</th>
+                  <th className={styles.tableHeaderCell}>投稿者</th>
+                  <th className={styles.tableHeaderCell}>投稿日</th>
+                  <th className={styles.tableHeaderCell}>操作</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className={styles.tableBody}>
                 {posts.map((post) => (
-                  <tr key={post.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {post.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {post.title}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {post.type}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {post.user.username}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <tr key={post.id} className={styles.tableRow}>
+                    <td className={styles.tableCell}>{post.id}</td>
+                    <td className={styles.tableCell}>{post.title}</td>
+                    <td className={styles.tableCell}>{post.type}</td>
+                    <td className={styles.tableCell}>{post.user.username}</td>
+                    <td className={styles.tableCell}>
                       {new Date(post.createdAt).toLocaleDateString('ja-JP')}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className={styles.tableCell}>
                       <button
                         onClick={() => deletePost(post.id)}
-                        className="text-red-600 hover:text-red-900"
+                        className={styles.deleteButton}
                       >
                         削除
                       </button>

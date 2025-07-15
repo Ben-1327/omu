@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import PostCard from '@/components/posts/PostCard'
 import { Post, User, Tag } from '@prisma/client'
+import styles from './search.module.css'
 
 type PostWithDetails = Post & {
   user: User
@@ -15,7 +16,7 @@ type PostWithDetails = Post & {
   }
 }
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams()
   const [posts, setPosts] = useState<PostWithDetails[]>([])
   const [loading, setLoading] = useState(false)
@@ -57,28 +58,28 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>
           検索
         </h1>
         
-        <form onSubmit={handleSearch} className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
+        <form onSubmit={handleSearch} className={styles.form}>
+          <div className={styles.formContainer}>
+            <div className={styles.inputContainer}>
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="キーワードを入力..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className={styles.input}
               />
             </div>
-            <div className="flex gap-2">
+            <div className={styles.controls}>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={styles.select}
               >
                 <option value="all">すべて</option>
                 <option value="article">記事</option>
@@ -88,7 +89,7 @@ export default function SearchPage() {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={styles.select}
               >
                 <option value="new">新着順</option>
                 <option value="popular">人気順</option>
@@ -96,7 +97,7 @@ export default function SearchPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className={styles.searchButton}
               >
                 {loading ? '検索中...' : '検索'}
               </button>
@@ -105,26 +106,34 @@ export default function SearchPage() {
         </form>
       </div>
 
-      <div className="grid gap-6">
+      <div className={styles.results}>
         {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">検索中...</p>
+          <div className={styles.loading}>
+            <div className={styles.loadingSpinner}></div>
+            <p className={styles.loadingText}>検索中...</p>
           </div>
         ) : posts.length > 0 ? (
           posts.map((post) => (
             <PostCard key={post.id} post={post} />
           ))
         ) : (query || type !== 'all') ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">検索結果が見つかりませんでした。</p>
+          <div className={styles.emptyState}>
+            <p className={styles.emptyText}>検索結果が見つかりませんでした。</p>
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-600">キーワードを入力して検索してください。</p>
+          <div className={styles.emptyState}>
+            <p className={styles.emptyText}>キーワードを入力して検索してください。</p>
           </div>
         )}
       </div>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
   )
 }
