@@ -80,9 +80,10 @@ model Post {
   userId      String      @map("user_id")
   type        PostType
   title       String
-  content     String
+  content     String?
   description String?     // for prompt posts: explanation/usage description
   platform    String?     // for conversation posts: ChatGPT | Claude | Gemini | X
+  link        String?     // for conversation posts: link to original conversation
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
   

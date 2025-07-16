@@ -19,6 +19,7 @@ interface PostFormData {
   content: string
   description?: string
   platform?: string
+  link?: string
   tags: string[]
 }
 
@@ -32,6 +33,7 @@ export default function PostForm() {
     content: '',
     description: '',
     platform: '',
+    link: '',
     tags: []
   })
   
@@ -45,19 +47,41 @@ export default function PostForm() {
     setIsSubmitting(true)
     
     try {
+      // 会話投稿の場合はcontentを空文字に設定
+      const submitData = {
+        ...formData,
+        content: formData.type === 'conversation' ? '' : formData.content
+      }
+
+      console.log('投稿データ:', submitData)
+
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       })
 
+      console.log('レスポンスステータス:', response.status)
+
       if (response.ok) {
+        const responseData = await response.json()
+        console.log('投稿成功:', responseData)
         router.push('/')
+      } else {
+        const errorData = await response.json()
+        console.error('API エラー:', errorData)
+        console.error('レスポンスヘッダー:', response.headers)
+        alert(errorData.error || '投稿に失敗しました')
       }
     } catch (error) {
-      console.error('投稿エラー:', error)
+      console.error('投稿エラー (catch):', error)
+      console.error('エラーの詳細:', {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      })
+      alert('投稿に失敗しました: ' + (error instanceof Error ? error.message : String(error)))
     } finally {
       setIsSubmitting(false)
     }
@@ -112,24 +136,6 @@ export default function PostForm() {
           </div>
         </div>
 
-        {/* プラットフォーム選択（会話の場合のみ） */}
-        {formData.type === 'conversation' && (
-          <div className={styles.section}>
-            <label className={styles.sectionLabel}>プラットフォーム</label>
-            <select
-              value={formData.platform}
-              onChange={(e) => setFormData(prev => ({ ...prev, platform: e.target.value }))}
-              className={styles.select}
-              required
-            >
-              <option value="">選択してください</option>
-              <option value="ChatGPT">ChatGPT</option>
-              <option value="Claude">Claude</option>
-              <option value="Gemini">Gemini</option>
-              <option value="Grok">Grok</option>
-            </select>
-          </div>
-        )}
 
         {/* タイトル */}
         <div className={styles.section}>
@@ -189,8 +195,43 @@ export default function PostForm() {
               />
             </div>
           </>
+        ) : formData.type === 'conversation' ? (
+          /* 会話投稿の場合の専用レイアウト */
+          <>
+            {/* 説明文 */}
+            <div className={styles.section}>
+              <label className={styles.sectionLabel}>
+                説明文
+                <span className={styles.characterCount}>
+                  {formData.description?.length || 0} 文字
+                </span>
+              </label>
+              <textarea
+                value={formData.description || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                className={styles.descriptionTextarea}
+                placeholder="会話の内容、背景、得られた知見などを説明してください"
+                rows={8}
+                required
+              />
+            </div>
+
+            {/* リンク */}
+            <div className={styles.section}>
+              <label className={styles.sectionLabel}>
+                リンク（オプション）
+              </label>
+              <input
+                type="url"
+                value={formData.link || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, link: e.target.value }))}
+                className={styles.titleInput}
+                placeholder="元の会話へのリンク（ChatGPT、Claude など）"
+              />
+            </div>
+          </>
         ) : (
-          /* 記事・会話投稿の場合の従来レイアウト */
+          /* 記事投稿の場合の従来レイアウト */
           <div className={styles.section}>
             <div className={styles.editorHeader}>
               <label className={styles.sectionLabel}>

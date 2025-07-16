@@ -345,7 +345,7 @@ export default function PostDetailPage() {
               <h2 className={styles.promptSectionTitle}>
                 🤖 プロンプト
                 <button 
-                  onClick={() => navigator.clipboard.writeText(post.content)}
+                  onClick={() => navigator.clipboard.writeText(post.content || '')}
                   className={styles.copyButton}
                   title="プロンプトをコピー"
                 >
@@ -353,7 +353,7 @@ export default function PostDetailPage() {
                 </button>
               </h2>
               <pre className={styles.promptContent}>
-                <code>{post.content}</code>
+                <code>{post.content || ''}</code>
               </pre>
             </div>
 
@@ -372,14 +372,47 @@ export default function PostDetailPage() {
               </div>
             )}
           </>
+        ) : post.type === 'conversation' ? (
+          /* 会話投稿の場合の特別表示 */
+          <>
+            {/* 説明文 */}
+            {post.description && (
+              <div className={styles.descriptionSection}>
+                <h2 className={styles.promptSectionTitle}>📝 説明・まとめ</h2>
+                <div className={styles.content}>
+                  <ReactMarkdown 
+                    components={MarkdownComponents}
+                    remarkPlugins={[remarkBreaks]}
+                  >
+                    {post.description}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            )}
+
+            {/* リンク */}
+            {post.link && (
+              <div className={styles.linkSection}>
+                <h2 className={styles.promptSectionTitle}>🔗 元の会話</h2>
+                <a 
+                  href={post.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={styles.linkButton}
+                >
+                  元の会話を見る
+                </a>
+              </div>
+            )}
+          </>
         ) : (
-          /* 記事・会話投稿の場合の従来表示 */
+          /* 記事投稿の場合の従来表示 */
           <div className={styles.content}>
             <ReactMarkdown 
               components={MarkdownComponents}
               remarkPlugins={[remarkBreaks]}
             >
-              {post.content}
+              {post.content || ''}
             </ReactMarkdown>
           </div>
         )}
