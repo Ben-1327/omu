@@ -59,32 +59,32 @@ export default function PostDetailPage() {
 
   // カスタムMarkdownコンポーネント
   const MarkdownComponents = {
-    h1: (props: any) => {
+    h1: (props: React.PropsWithChildren<React.HTMLAttributes<HTMLHeadingElement>>) => {
       const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
       return <h1 id={id} {...props}>{props.children}</h1>
     },
-    h2: (props: any) => {
+    h2: (props: React.PropsWithChildren<React.HTMLAttributes<HTMLHeadingElement>>) => {
       const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
       return <h2 id={id} {...props}>{props.children}</h2>
     },
-    h3: (props: any) => {
+    h3: (props: React.PropsWithChildren<React.HTMLAttributes<HTMLHeadingElement>>) => {
       const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
       return <h3 id={id} {...props}>{props.children}</h3>
     },
-    h4: (props: any) => {
+    h4: (props: React.PropsWithChildren<React.HTMLAttributes<HTMLHeadingElement>>) => {
       const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
       return <h4 id={id} {...props}>{props.children}</h4>
     },
-    h5: (props: any) => {
+    h5: (props: React.PropsWithChildren<React.HTMLAttributes<HTMLHeadingElement>>) => {
       const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
       return <h5 id={id} {...props}>{props.children}</h5>
     },
-    h6: (props: any) => {
+    h6: (props: React.PropsWithChildren<React.HTMLAttributes<HTMLHeadingElement>>) => {
       const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
       return <h6 id={id} {...props}>{props.children}</h6>
@@ -139,7 +139,7 @@ export default function PostDetailPage() {
     } finally {
       setLoading(false)
     }
-  }, [params.id, session?.user?.id, checkLikeAndBookmarkStatus])
+  }, [params.id, session?.user?.id, checkLikeAndBookmarkStatus, generateTocItems])
 
   useEffect(() => {
     if (params.id) {

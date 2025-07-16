@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { User, Post, Tag } from '@prisma/client'
@@ -37,13 +37,7 @@ export default function UserProfilePage() {
 
   const userId = params.id as string
 
-  useEffect(() => {
-    if (userId) {
-      fetchUserData()
-    }
-  }, [userId])
-
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const [userResponse, postsResponse] = await Promise.all([
         fetch(`/api/users/${userId}`),
@@ -64,7 +58,13 @@ export default function UserProfilePage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserData()
+    }
+  }, [userId, fetchUserData])
 
   const fetchFavorites = async () => {
     try {

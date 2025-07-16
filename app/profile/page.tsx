@@ -21,8 +21,8 @@ export default function ProfilePage() {
   const { data: session, status } = useSession()
   const [posts, setPosts] = useState<PostWithDetails[]>([])
   const [bookmarks, setBookmarks] = useState<PostWithDetails[]>([])
-  const [followers, setFollowers] = useState<any[]>([])
-  const [following, setFollowing] = useState<any[]>([])
+  const [followers, setFollowers] = useState<{id: string, username: string, name: string, email?: string}[]>([])
+  const [following, setFollowing] = useState<{id: string, username: string, name: string, email?: string}[]>([])
   const [activeTab, setActiveTab] = useState<'posts' | 'bookmarks' | 'followers' | 'following'>('posts')
   const [loading, setLoading] = useState(true)
 

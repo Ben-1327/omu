@@ -59,7 +59,7 @@ export default function EditPostPage() {
             title: data.title,
             content: data.content,
             platform: data.platform || '',
-            tags: data.postTags.map((pt: any) => pt.tag.name)
+            tags: data.postTags.map((pt: { tag: { name: string } }) => pt.tag.name)
           })
         } else {
           setError('投稿が見つかりません')
