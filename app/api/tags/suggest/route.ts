@@ -14,30 +14,23 @@ export async function GET(request: NextRequest) {
     const tags = await prisma.tag.findMany({
       where: {
         name: {
-          contains: query,
-          mode: 'insensitive'
+          contains: query
         }
       },
       include: {
-        _count: {
-          select: {
-            postTags: true
-          }
-        }
-      },
-      orderBy: {
-        postTags: {
-          _count: 'desc'
-        }
+        postTags: true
       },
       take: limit
     })
 
-    return NextResponse.json(tags.map(tag => ({
+    // 投稿数でソートして返す
+    const tagsWithCount = tags.map(tag => ({
       id: tag.id,
       name: tag.name,
-      count: tag._count.postTags
-    })))
+      count: tag.postTags.length
+    })).sort((a, b) => b.count - a.count)
+
+    return NextResponse.json(tagsWithCount)
   } catch (error) {
     console.error('タグサジェスト取得エラー:', error)
     return NextResponse.json({ error: 'タグサジェストの取得に失敗しました' }, { status: 500 })

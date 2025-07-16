@@ -58,35 +58,35 @@ export default function PostDetailPage() {
 
   // カスタムMarkdownコンポーネント
   const MarkdownComponents = {
-    h1: ({ children }: { children: React.ReactNode }) => {
-      const text = String(children)
+    h1: (props: any) => {
+      const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
-      return <h1 id={id}>{children}</h1>
+      return <h1 id={id} {...props}>{props.children}</h1>
     },
-    h2: ({ children }: { children: React.ReactNode }) => {
-      const text = String(children)
+    h2: (props: any) => {
+      const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
-      return <h2 id={id}>{children}</h2>
+      return <h2 id={id} {...props}>{props.children}</h2>
     },
-    h3: ({ children }: { children: React.ReactNode }) => {
-      const text = String(children)
+    h3: (props: any) => {
+      const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
-      return <h3 id={id}>{children}</h3>
+      return <h3 id={id} {...props}>{props.children}</h3>
     },
-    h4: ({ children }: { children: React.ReactNode }) => {
-      const text = String(children)
+    h4: (props: any) => {
+      const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
-      return <h4 id={id}>{children}</h4>
+      return <h4 id={id} {...props}>{props.children}</h4>
     },
-    h5: ({ children }: { children: React.ReactNode }) => {
-      const text = String(children)
+    h5: (props: any) => {
+      const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
-      return <h5 id={id}>{children}</h5>
+      return <h5 id={id} {...props}>{props.children}</h5>
     },
-    h6: ({ children }: { children: React.ReactNode }) => {
-      const text = String(children)
+    h6: (props: any) => {
+      const text = String(props.children)
       const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')
-      return <h6 id={id}>{children}</h6>
+      return <h6 id={id} {...props}>{props.children}</h6>
     },
   }
 
