@@ -81,6 +81,7 @@ model Post {
   type        PostType
   title       String
   content     String
+  description String?     // for prompt posts: explanation/usage description
   platform    String?     // for conversation posts: ChatGPT | Claude | Gemini | X
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")

@@ -54,11 +54,16 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { type, title, content, platform, tags } = body
+    const { type, title, content, description, platform, tags } = body
 
     // バリデーション
     if (!type || !title || !content) {
       return NextResponse.json({ error: '必須項目が不足しています' }, { status: 400 })
+    }
+
+    // プロンプト投稿の場合は説明文も必須
+    if (type === 'prompt' && !description) {
+      return NextResponse.json({ error: 'プロンプト投稿には説明文が必要です' }, { status: 400 })
     }
 
     if (type === 'conversation' && !platform) {
@@ -74,6 +79,7 @@ export async function POST(request: NextRequest) {
           type,
           title,
           content,
+          description: type === 'prompt' ? description : null,
           platform: type === 'conversation' ? platform : null,
         },
         include: {

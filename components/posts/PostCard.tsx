@@ -4,6 +4,7 @@ import { Post, User, Tag } from '@prisma/client'
 interface PostCardProps {
  post: Post & {
   user: User
+  description?: string | null
   postTags: Array<{
    tag: Tag
   }>
@@ -64,7 +65,10 @@ export default function PostCard({ post }: PostCardProps) {
       {post.title}
      </h3>
      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-      {post.content.substring(0, 150)}...
+      {post.type === 'prompt' && post.description 
+        ? post.description.substring(0, 150) + '...'
+        : post.content.substring(0, 150) + '...'
+      }
      </p>
     </Link>
 

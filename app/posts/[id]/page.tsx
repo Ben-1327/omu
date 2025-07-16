@@ -337,15 +337,52 @@ export default function PostDetailPage() {
           {post.title}
         </h1>
 
+        {/* プロンプト投稿の場合の特別表示 */}
+        {post.type === 'prompt' ? (
+          <>
+            {/* プロンプト本文 */}
+            <div className={styles.promptSection}>
+              <h2 className={styles.promptSectionTitle}>
+                🤖 プロンプト
+                <button 
+                  onClick={() => navigator.clipboard.writeText(post.content)}
+                  className={styles.copyButton}
+                  title="プロンプトをコピー"
+                >
+                  📋 コピー
+                </button>
+              </h2>
+              <pre className={styles.promptContent}>
+                <code>{post.content}</code>
+              </pre>
+            </div>
 
-        <div className={styles.content}>
-          <ReactMarkdown 
-            components={MarkdownComponents}
-            remarkPlugins={[remarkBreaks]}
-          >
-            {post.content}
-          </ReactMarkdown>
-        </div>
+            {/* 説明文 */}
+            {post.description && (
+              <div className={styles.descriptionSection}>
+                <h2 className={styles.promptSectionTitle}>📝 説明・使い方</h2>
+                <div className={styles.content}>
+                  <ReactMarkdown 
+                    components={MarkdownComponents}
+                    remarkPlugins={[remarkBreaks]}
+                  >
+                    {post.description}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          /* 記事・会話投稿の場合の従来表示 */
+          <div className={styles.content}>
+            <ReactMarkdown 
+              components={MarkdownComponents}
+              remarkPlugins={[remarkBreaks]}
+            >
+              {post.content}
+            </ReactMarkdown>
+          </div>
+        )}
 
         <div className={styles.tags}>
           {post.postTags.map(({ tag }) => (

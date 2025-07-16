@@ -17,6 +17,7 @@ interface PostFormData {
   type: PostType
   title: string
   content: string
+  description?: string
   platform?: string
   tags: string[]
 }
@@ -29,6 +30,7 @@ export default function PostForm() {
     type: 'article',
     title: '',
     content: '',
+    description: '',
     platform: '',
     tags: []
   })
@@ -148,15 +150,55 @@ export default function PostForm() {
           />
         </div>
 
-        {/* 本文 */}
-        <div className={styles.section}>
-          <div className={styles.editorHeader}>
-            <label className={styles.sectionLabel}>
-              本文
-              <span className={styles.characterCount}>
-                {formData.content.length} 文字
-              </span>
-            </label>
+        {/* プロンプト投稿の場合の特別レイアウト */}
+        {formData.type === 'prompt' ? (
+          <>
+            {/* プロンプト本文 */}
+            <div className={styles.section}>
+              <label className={styles.sectionLabel}>
+                プロンプト本文
+                <span className={styles.characterCount}>
+                  {formData.content.length} 文字
+                </span>
+              </label>
+              <textarea
+                value={formData.content}
+                onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                className={styles.promptTextarea}
+                placeholder="実際に使用するプロンプトを入力してください（コピー&ペーストで使えるように）"
+                rows={8}
+                required
+              />
+            </div>
+
+            {/* 説明文 */}
+            <div className={styles.section}>
+              <label className={styles.sectionLabel}>
+                説明文
+                <span className={styles.characterCount}>
+                  {formData.description?.length || 0} 文字
+                </span>
+              </label>
+              <textarea
+                value={formData.description || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                className={styles.descriptionTextarea}
+                placeholder="プロンプトの使い方、効果、コツなどを説明してください"
+                rows={6}
+                required
+              />
+            </div>
+          </>
+        ) : (
+          /* 記事・会話投稿の場合の従来レイアウト */
+          <div className={styles.section}>
+            <div className={styles.editorHeader}>
+              <label className={styles.sectionLabel}>
+                本文
+                <span className={styles.characterCount}>
+                  {formData.content.length} 文字
+                </span>
+              </label>
             <div className={styles.editorModeToggle}>
               <button
                 type="button"
@@ -208,7 +250,8 @@ export default function PostForm() {
               }}
             />
           </div>
-        </div>
+          </div>
+        )}
 
         {/* タグ */}
         <div className={styles.section}>
