@@ -7,11 +7,11 @@ export default function Header() {
   const { data: session } = useSession()
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
+            <Link href="/" className="text-xl font-bold text-gray-900">
               omu
             </Link>
           </div>
@@ -19,13 +19,13 @@ export default function Header() {
           <nav className="flex items-center space-x-4">
             <Link 
               href="/posts/new" 
-              className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
             >
               投稿
             </Link>
             <Link 
               href="/search" 
-              className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
             >
               検索
             </Link>
@@ -34,7 +34,7 @@ export default function Header() {
               <div className="flex items-center space-x-4">
                 <Link 
                   href="/profile" 
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {session.user.name}
                 </Link>
@@ -48,7 +48,7 @@ export default function Header() {
                 )}
                 <button
                   onClick={() => signOut()}
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   ログアウト
                 </button>
@@ -57,7 +57,7 @@ export default function Header() {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => signIn()}
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   ログイン
                 </button>

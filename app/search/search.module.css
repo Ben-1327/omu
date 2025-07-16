@@ -134,8 +134,3 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .title {
-    color: #ffffff;
-  }
-}
