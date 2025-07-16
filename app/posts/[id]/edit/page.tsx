@@ -45,6 +45,7 @@ export default function EditPostPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [previewMode, setPreviewMode] = useState<'edit' | 'preview' | 'live'>('live')
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -183,33 +184,36 @@ export default function EditPostPage() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>投稿を編集</h1>
-      
-      {error && (
-        <div className={styles.errorMessage}>
-          {error}
-        </div>
-      )}
+      <div className={styles.header}>
+        <h1 className={styles.title}>投稿を編集</h1>
+      </div>
       
       <form onSubmit={handleSubmit} className={styles.form}>
+        {error && (
+          <div className={styles.errorMessage}>
+            {error}
+          </div>
+        )}
         {/* タイプ選択 */}
-        <div className={styles.field}>
-          <label className={styles.label}>投稿タイプ</label>
-          <div className={styles.typeButtons}>
+        <div className={styles.section}>
+          <label className={styles.sectionLabel}>投稿タイプ</label>
+          <div className={styles.typeSelector}>
             {[
-              { value: 'article', label: '記事' },
-              { value: 'prompt', label: 'プロンプト' },
-              { value: 'conversation', label: '会話' }
-            ].map(({ value, label }) => (
+              { value: 'article', label: '記事', icon: '📝', description: '技術記事やノウハウを共有' },
+              { value: 'prompt', label: 'プロンプト', icon: '🤖', description: 'AI用プロンプトを共有' },
+              { value: 'conversation', label: '会話', icon: '💬', description: 'AIとの会話を共有' }
+            ].map(({ value, label, icon, description }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, type: value as PostType }))}
-                className={`${styles.typeButton} ${
-                  formData.type === value ? styles.typeButtonActive : styles.typeButtonInactive
+                className={`${styles.typeCard} ${
+                  formData.type === value ? styles.typeCardActive : ''
                 }`}
               >
-                {label}
+                <div className={styles.typeIcon}>{icon}</div>
+                <div className={styles.typeLabel}>{label}</div>
+                <div className={styles.typeDescription}>{description}</div>
               </button>
             ))}
           </div>
@@ -217,8 +221,8 @@ export default function EditPostPage() {
 
         {/* プラットフォーム選択（会話の場合のみ） */}
         {formData.type === 'conversation' && (
-          <div className={styles.field}>
-            <label className={styles.label}>プラットフォーム</label>
+          <div className={styles.section}>
+            <label className={styles.sectionLabel}>プラットフォーム</label>
             <select
               value={formData.platform}
               onChange={(e) => setFormData(prev => ({ ...prev, platform: e.target.value }))}
@@ -235,13 +239,18 @@ export default function EditPostPage() {
         )}
 
         {/* タイトル */}
-        <div className={styles.field}>
-          <label className={styles.label}>タイトル</label>
+        <div className={styles.section}>
+          <label className={styles.sectionLabel}>
+            タイトル
+            <span className={styles.characterCount}>
+              {formData.title.length}/100
+            </span>
+          </label>
           <input
             type="text"
             value={formData.title}
             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            className={styles.input}
+            className={styles.titleInput}
             placeholder="タイトルを入力してください"
             maxLength={100}
             required
@@ -249,21 +258,57 @@ export default function EditPostPage() {
         </div>
 
         {/* 本文 */}
-        <div className={styles.field}>
-          <label className={styles.label}>本文</label>
-          <div data-color-mode="light">
+        <div className={styles.section}>
+          <div className={styles.editorHeader}>
+            <label className={styles.sectionLabel}>
+              本文
+              <span className={styles.characterCount}>
+                {formData.content.length} 文字
+              </span>
+            </label>
+            <div className={styles.editorModeToggle}>
+              <button
+                type="button"
+                onClick={() => setPreviewMode('edit')}
+                className={`${styles.modeButton} ${previewMode === 'edit' ? styles.modeButtonActive : ''}`}
+              >
+                編集
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewMode('live')}
+                className={`${styles.modeButton} ${previewMode === 'live' ? styles.modeButtonActive : ''}`}
+              >
+                プレビュー
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewMode('preview')}
+                className={`${styles.modeButton} ${previewMode === 'preview' ? styles.modeButtonActive : ''}`}
+              >
+                プレビューのみ
+              </button>
+            </div>
+          </div>
+          <div className={styles.editorContainer} data-color-mode="light">
             <MDEditor
               value={formData.content}
               onChange={(value) => setFormData(prev => ({ ...prev, content: value || '' }))}
-              preview="edit"
+              preview={previewMode}
               height={400}
+              hideToolbar
+              data-color-mode="light"
               visibleDragbar={false}
               textareaProps={{
                 placeholder: 'Markdownで記述してください',
                 style: {
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                  fontFamily: 'monospace',
+                  fontSize: 16,
+                  lineHeight: 1.6,
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  backgroundColor: '#ffffff',
+                  color: '#2d3748',
+                  border: 'none',
+                  outline: 'none',
                 },
               }}
               previewOptions={{
@@ -275,8 +320,8 @@ export default function EditPostPage() {
         </div>
 
         {/* タグ */}
-        <div className={styles.field}>
-          <label className={styles.label}>タグ（最大5個）</label>
+        <div className={styles.section}>
+          <label className={styles.sectionLabel}>タグ（最大5個）</label>
           <TagInput
             tags={formData.tags}
             onTagsChange={handleTagsChange}
@@ -285,30 +330,32 @@ export default function EditPostPage() {
           />
         </div>
 
-        {/* 操作ボタン */}
-        <div className={styles.buttonContainer}>
-          <button
-            type="button"
-            onClick={handleDelete}
-            className={styles.deleteButton}
-          >
-            削除
-          </button>
-          <div className={styles.rightButtons}>
+        {/* 送信ボタン */}
+        <div className={styles.submitSection}>
+          <div className={styles.buttonContainer}>
             <button
               type="button"
-              onClick={() => router.back()}
-              className={styles.cancelButton}
+              onClick={handleDelete}
+              className={styles.deleteButton}
             >
-              キャンセル
+              削除
             </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={styles.submitButton}
-            >
-              {isSubmitting ? '更新中...' : '更新'}
-            </button>
+            <div className={styles.rightButtons}>
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className={styles.cancelButton}
+              >
+                キャンセル
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={styles.submitButton}
+              >
+                {isSubmitting ? '更新中...' : '更新'}
+              </button>
+            </div>
           </div>
         </div>
       </form>
