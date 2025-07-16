@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import styles from './admin.module.css'
 
 interface User {
@@ -18,6 +19,7 @@ interface Post {
   title: string
   type: string
   user: {
+    id: string
     username: string
   }
   createdAt: string
@@ -392,7 +394,11 @@ export default function AdminPage() {
                 {users.map((user) => (
                   <tr key={user.id} className={styles.tableRow}>
                     <td className={styles.tableCell}>{user.id}</td>
-                    <td className={styles.tableCell}>{user.username}</td>
+                    <td className={styles.tableCell}>
+                      <Link href={`/users/${user.id}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                        {user.username}
+                      </Link>
+                    </td>
                     <td className={styles.tableCell}>{user.email}</td>
                     <td className={styles.tableCell}>
                       {user.isAdmin ? '管理者' : '一般'}
@@ -442,7 +448,11 @@ export default function AdminPage() {
                     <td className={styles.tableCell}>{post.id}</td>
                     <td className={styles.tableCell}>{post.title}</td>
                     <td className={styles.tableCell}>{post.type}</td>
-                    <td className={styles.tableCell}>{post.user.username}</td>
+                    <td className={styles.tableCell}>
+                      <Link href={`/users/${post.user.id}`} className="text-blue-600 hover:text-blue-800 hover:underline">
+                        {post.user.username}
+                      </Link>
+                    </td>
                     <td className={styles.tableCell}>
                       {new Date(post.createdAt).toLocaleDateString('ja-JP')}
                     </td>

@@ -70,9 +70,9 @@ export default function PostCard({ post }: PostCardProps) {
 
     <div className="flex items-center justify-between">
      <div className="flex items-center space-x-2">
-      <span className="text-sm text-gray-500 ">
+      <Link href={`/users/${post.user.id}`} className="text-sm text-gray-500 hover:text-gray-800 hover:underline">
        by {post.user.username}
-      </span>
+      </Link>
       <span className="text-sm text-gray-500 ">
        ♥ {post._count.likes}
       </span>

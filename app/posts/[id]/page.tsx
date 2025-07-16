@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { Post, User, Tag } from '@prisma/client'
 import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
+import Link from 'next/link'
 import XShareButton from '@/components/ui/XShareButton'
 import styles from './post-detail.module.css'
 
@@ -363,7 +364,7 @@ export default function PostDetailPage() {
         <div className={styles.sidebar}>
           {/* ユーザー情報 */}
           <div className={styles.authorInfo}>
-            <div className={styles.authorCard}>
+            <Link href={`/users/${post.user.id}`} className={styles.authorCard}>
               <div className={styles.avatar}>
                 {post.user.username[0]?.toUpperCase()}
               </div>
@@ -406,7 +407,7 @@ export default function PostDetailPage() {
                   </div>
                 )}
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* 目次 */}

@@ -7,9 +7,10 @@ import styles from './FollowButton.module.css'
 interface FollowButtonProps {
   userId: string
   className?: string
+  onFollowChange?: () => void
 }
 
-export default function FollowButton({ userId, className = '' }: FollowButtonProps) {
+export default function FollowButton({ userId, className = '', onFollowChange }: FollowButtonProps) {
   const { data: session } = useSession()
   const [following, setFollowing] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -48,6 +49,7 @@ export default function FollowButton({ userId, className = '' }: FollowButtonPro
       if (response.ok) {
         const data = await response.json()
         setFollowing(data.following)
+        onFollowChange?.()
       }
     } catch (error) {
       console.error('フォロー処理エラー:', error)
