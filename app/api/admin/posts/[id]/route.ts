@@ -17,6 +17,11 @@ export async function DELETE(
     const resolvedParams = await params
     const postId = parseInt(resolvedParams.id)
 
+    // IDの検証
+    if (isNaN(postId) || postId <= 0) {
+      return NextResponse.json({ error: '無効な投稿IDです' }, { status: 400 })
+    }
+
     // 投稿の存在確認
     const post = await prisma.post.findUnique({
       where: { id: postId }
