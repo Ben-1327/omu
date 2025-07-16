@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { Post, Tag } from '@prisma/client'
 import dynamic from 'next/dynamic'
 import TagInput from '@/components/ui/TagInput'
+import remarkBreaks from 'remark-breaks'
 import styles from './edit.module.css'
 
 // Markdownエディタを動的インポート（SSR対応）
@@ -256,7 +257,7 @@ export default function EditPostPage() {
               onChange={(value) => setFormData(prev => ({ ...prev, content: value || '' }))}
               preview="edit"
               height={400}
-              visibleDragBar={false}
+              visibleDragbar={false}
               textareaProps={{
                 placeholder: 'Markdownで記述してください',
                 style: {
@@ -264,6 +265,10 @@ export default function EditPostPage() {
                   lineHeight: 1.5,
                   fontFamily: 'monospace',
                 },
+              }}
+              previewOptions={{
+                remarkPlugins: [remarkBreaks],
+                rehypePlugins: [],
               }}
             />
           </div>

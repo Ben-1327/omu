@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import TagInput from '@/components/ui/TagInput'
 import styles from './PostForm.module.css'
+import remarkBreaks from 'remark-breaks'
 
 // Markdownエディタを動的インポート（SSR対応）
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -187,6 +188,8 @@ export default function PostForm() {
               preview={previewMode}
               height={600}
               hideToolbar
+              data-color-mode="light"
+              visibleDragbar={false}
               textareaProps={{
                 placeholder: 'Markdownで記述してください',
                 style: {
@@ -198,6 +201,10 @@ export default function PostForm() {
                   border: 'none',
                   outline: 'none',
                 },
+              }}
+              previewOptions={{
+                remarkPlugins: [remarkBreaks],
+                rehypePlugins: [],
               }}
             />
           </div>

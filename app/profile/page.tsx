@@ -20,10 +20,10 @@ type PostWithDetails = Post & {
 export default function ProfilePage() {
   const { data: session, status } = useSession()
   const [posts, setPosts] = useState<PostWithDetails[]>([])
-  const [favorites, setFavorites] = useState<PostWithDetails[]>([])
+  const [bookmarks, setBookmarks] = useState<PostWithDetails[]>([])
   const [followers, setFollowers] = useState<any[]>([])
   const [following, setFollowing] = useState<any[]>([])
-  const [activeTab, setActiveTab] = useState<'posts' | 'favorites' | 'followers' | 'following'>('posts')
+  const [activeTab, setActiveTab] = useState<'posts' | 'bookmarks' | 'followers' | 'following'>('posts')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -34,20 +34,20 @@ export default function ProfilePage() {
 
   const fetchUserData = useCallback(async () => {
     try {
-      const [postsResponse, favoritesResponse, followersResponse, followingResponse] = await Promise.all([
+      const [postsResponse, bookmarksResponse, followersResponse, followingResponse] = await Promise.all([
         fetch(`/api/users/${session?.user?.id}/posts`),
         fetch(`/api/users/${session?.user?.id}/favorites`),
         fetch(`/api/users/${session?.user?.id}/followers`),
         fetch(`/api/users/${session?.user?.id}/following`)
       ])
 
-      if (postsResponse.ok && favoritesResponse.ok && followersResponse.ok && followingResponse.ok) {
+      if (postsResponse.ok && bookmarksResponse.ok && followersResponse.ok && followingResponse.ok) {
         const postsData = await postsResponse.json()
-        const favoritesData = await favoritesResponse.json()
+        const bookmarksData = await bookmarksResponse.json()
         const followersData = await followersResponse.json()
         const followingData = await followingResponse.json()
         setPosts(postsData)
-        setFavorites(favoritesData)
+        setBookmarks(bookmarksData)
         setFollowers(followersData)
         setFollowing(followingData)
       }
@@ -100,8 +100,8 @@ export default function ProfilePage() {
             <div className={styles.statLabel}>投稿</div>
           </div>
           <div className={styles.statItem}>
-            <div className={styles.statNumber}>{favorites.length}</div>
-            <div className={styles.statLabel}>お気に入り</div>
+            <div className={styles.statNumber}>{bookmarks.length}</div>
+            <div className={styles.statLabel}>ブックマーク</div>
           </div>
           <div className={styles.statItem}>
             <div className={styles.statNumber}>{followers.length}</div>
@@ -125,12 +125,12 @@ export default function ProfilePage() {
             投稿 ({posts.length})
           </button>
           <button
-            onClick={() => setActiveTab('favorites')}
+            onClick={() => setActiveTab('bookmarks')}
             className={`${styles.tab} ${
-              activeTab === 'favorites' ? styles.tabActive : styles.tabInactive
+              activeTab === 'bookmarks' ? styles.tabActive : styles.tabInactive
             }`}
           >
-            お気に入り ({favorites.length})
+            ブックマーク ({bookmarks.length})
           </button>
           <button
             onClick={() => setActiveTab('followers')}
@@ -162,14 +162,14 @@ export default function ProfilePage() {
               <p className={styles.emptyText}>まだ投稿がありません。</p>
             </div>
           )
-        ) : activeTab === 'favorites' ? (
-          favorites.length > 0 ? (
-            favorites.map((post) => (
+        ) : activeTab === 'bookmarks' ? (
+          bookmarks.length > 0 ? (
+            bookmarks.map((post) => (
               <PostCard key={post.id} post={post} />
             ))
           ) : (
             <div className={styles.emptyState}>
-              <p className={styles.emptyText}>お気に入りがありません。</p>
+              <p className={styles.emptyText}>ブックマークがありません。</p>
             </div>
           )
         ) : activeTab === 'followers' ? (

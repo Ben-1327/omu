@@ -5,7 +5,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { Post, User, Tag } from '@prisma/client'
 import ReactMarkdown from 'react-markdown'
-import TwitterShareButton from '@/components/ui/TwitterShareButton'
+import remarkBreaks from 'remark-breaks'
+import XShareButton from '@/components/ui/XShareButton'
 import styles from './post-detail.module.css'
 
 interface TocItem {
@@ -31,7 +32,7 @@ export default function PostDetailPage() {
   const [post, setPost] = useState<PostWithDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [liked, setLiked] = useState(false)
-  const [favorited, setFavorited] = useState(false)
+  const [bookmarked, setBookmarked] = useState(false)
   const [currentUrl, setCurrentUrl] = useState('')
   const [tocItems, setTocItems] = useState<TocItem[]>([])
 
@@ -93,9 +94,9 @@ export default function PostDetailPage() {
     setCurrentUrl(window.location.origin)
   }, [])
 
-  const checkLikeAndFavoriteStatus = useCallback(async () => {
+  const checkLikeAndBookmarkStatus = useCallback(async () => {
     try {
-      const [likeResponse, favoriteResponse] = await Promise.all([
+      const [likeResponse, bookmarkResponse] = await Promise.all([
         fetch(`/api/posts/${params.id}/like-status`),
         fetch(`/api/posts/${params.id}/favorite-status`)
       ])
@@ -105,9 +106,9 @@ export default function PostDetailPage() {
         setLiked(likeData.liked)
       }
 
-      if (favoriteResponse.ok) {
-        const favoriteData = await favoriteResponse.json()
-        setFavorited(favoriteData.favorited)
+      if (bookmarkResponse.ok) {
+        const bookmarkData = await bookmarkResponse.json()
+        setBookmarked(bookmarkData.favorited)
       }
     } catch (error) {
       console.error('状態確認エラー:', error)
@@ -127,9 +128,9 @@ export default function PostDetailPage() {
           setTocItems(toc)
         }
         
-        // いいね・お気に入り状態を確認
+        // いいね・ブックマーク状態を確認
         if (session?.user?.id) {
-          checkLikeAndFavoriteStatus()
+          checkLikeAndBookmarkStatus()
         }
       }
     } catch (error) {
@@ -137,7 +138,7 @@ export default function PostDetailPage() {
     } finally {
       setLoading(false)
     }
-  }, [params.id, session?.user?.id, checkLikeAndFavoriteStatus])
+  }, [params.id, session?.user?.id, checkLikeAndBookmarkStatus])
 
   useEffect(() => {
     if (params.id) {
@@ -177,7 +178,7 @@ export default function PostDetailPage() {
     }
   }
 
-  const handleFavorite = async () => {
+  const handleBookmark = async () => {
     if (!session?.user?.id) return
 
     try {
@@ -191,10 +192,10 @@ export default function PostDetailPage() {
 
       if (response.ok) {
         const data = await response.json()
-        setFavorited(data.favorited)
+        setBookmarked(data.favorited)
       }
     } catch (error) {
-      console.error('お気に入りエラー:', error)
+      console.error('ブックマークエラー:', error)
     }
   }
 
@@ -289,23 +290,22 @@ export default function PostDetailPage() {
               </button>
               
               <button
-                onClick={handleFavorite}
-                className={`${styles.sideActionButton} ${styles.sideFavoriteButton} ${
-                  favorited ? styles.sideActionButtonActive : ''
+                onClick={handleBookmark}
+                className={`${styles.sideActionButton} ${styles.sideBookmarkButton} ${
+                  bookmarked ? styles.sideActionButtonActive : ''
                 }`}
-                title={favorited ? 'お気に入り済み' : 'お気に入り'}
+                title={bookmarked ? 'ブックマーク済み' : 'ブックマーク'}
               >
-                <span className={styles.sideActionIcon}>★</span>
+                <span className={styles.sideActionIcon}>🔖</span>
               </button>
               
-              {/* Twitterシェアボタン */}
+              {/* Xシェアボタン */}
               {currentUrl && (
-                <div className={styles.sideShareButton}>
-                  <TwitterShareButton
-                    url={`${currentUrl}/posts/${post.id}`}
-                    text={`${post.title} | omu`}
-                  />
-                </div>
+                <XShareButton
+                  url={`${currentUrl}/posts/${post.id}`}
+                  text={`${post.title} | omu`}
+                  className={styles.sideShareButton}
+                />
               )}
             </>
           )}
@@ -338,7 +338,10 @@ export default function PostDetailPage() {
 
 
         <div className={styles.content}>
-          <ReactMarkdown components={MarkdownComponents}>
+          <ReactMarkdown 
+            components={MarkdownComponents}
+            remarkPlugins={[remarkBreaks]}
+          >
             {post.content}
           </ReactMarkdown>
         </div>
@@ -382,6 +385,26 @@ export default function PostDetailPage() {
                     </span>
                   </div>
                 </div>
+                
+                {/* 編集・削除ボタン（著者または管理者のみ） */}
+                {session?.user?.id && (session.user.id === post.userId || session.user.isAdmin) && (
+                  <div className={styles.authorActions}>
+                    <button
+                      onClick={() => router.push(`/posts/${post.id}/edit`)}
+                      className={styles.authorEditButton}
+                    >
+                      <span className={styles.buttonIcon}>✏️</span>
+                      編集
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className={styles.authorDeleteButton}
+                    >
+                      <span className={styles.buttonIcon}>🗑️</span>
+                      削除
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -412,25 +435,6 @@ export default function PostDetailPage() {
           )}
         </div>
       </div>
-
-      {session?.user?.id && (session.user.id === post.userId || session.user.isAdmin) && (
-        <div className={styles.adminActions}>
-          <div className={styles.adminActionButtons}>
-            <button 
-              onClick={() => router.push(`/posts/${post.id}/edit`)}
-              className={styles.editButton}
-            >
-              編集
-            </button>
-            <button 
-              onClick={handleDelete}
-              className={styles.deleteButton}
-            >
-              削除
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
