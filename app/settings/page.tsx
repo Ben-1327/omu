@@ -8,7 +8,6 @@ import styles from './settings.module.css'
 interface User {
   id: string
   username: string
-  name: string
   email: string
   image?: string
   createdAt: string
@@ -29,8 +28,7 @@ export default function SettingsPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
-    username: '',
-    name: ''
+    username: ''
   })
 
   useEffect(() => {
@@ -51,8 +49,7 @@ export default function SettingsPage() {
         const userData = await response.json()
         setUser(userData)
         setFormData({
-          username: userData.username,
-          name: userData.name || ''
+          username: userData.username
         })
       } else {
         setError('ユーザー情報の取得に失敗しました')
@@ -86,7 +83,7 @@ export default function SettingsPage() {
         setUser(data)
         setSuccess('プロフィールを更新しました')
         // セッションを更新
-        await update({ name: data.name })
+        await update({ name: data.username })
       } else {
         setError(data.error || 'プロフィールの更新に失敗しました')
       }
@@ -135,7 +132,7 @@ export default function SettingsPage() {
           
           <div className={styles.profileInfo}>
             <div className={styles.avatar}>
-              {user.name?.[0]?.toUpperCase() || 'U'}
+              {user.username?.[0]?.toUpperCase() || 'U'}
             </div>
             <div className={styles.basicInfo}>
               <p className={styles.email}>{user.email}</p>
@@ -196,24 +193,6 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className={styles.field}>
-              <label htmlFor="name" className={styles.label}>
-                表示名
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className={styles.input}
-                placeholder="表示名"
-                required
-              />
-              <p className={styles.fieldDescription}>
-                他のユーザーに表示される名前です
-              </p>
-            </div>
 
             <div className={styles.formActions}>
               <button

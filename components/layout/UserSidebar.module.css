@@ -1,0 +1,210 @@
+.container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 24px;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.loginPrompt {
+  padding: 20px;
+}
+
+.loginCard {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+}
+
+.loginTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #14171a;
+  margin-bottom: 8px;
+}
+
+.loginDescription {
+  color: #657786;
+  font-size: 14px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.loginButton {
+  display: inline-block;
+  background: #1d9bf0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.loginButton:hover {
+  background: #1a8cd8;
+}
+
+.userCard {
+  padding: 20px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.userHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #1d9bf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+  margin-right: 12px;
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #14171a;
+  margin: 0 0 4px 0;
+}
+
+.userHandle {
+  color: #657786;
+  font-size: 14px;
+  margin: 0;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 18px;
+  font-weight: 600;
+  color: #14171a;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #657786;
+}
+
+.editButton {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid #cfd9de;
+  border-radius: 20px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  color: #0f1419;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.editButton:hover {
+  background: #f7f9fa;
+}
+
+.section {
+  padding: 20px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #14171a;
+  margin: 0 0 12px 0;
+}
+
+.sectionContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.articleCount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.count {
+  font-size: 18px;
+  font-weight: 600;
+  color: #14171a;
+}
+
+.countLabel {
+  font-size: 14px;
+  color: #657786;
+}
+
+.sectionLink {
+  color: #1d9bf0;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sectionLink:hover {
+  text-decoration: underline;
+}
+
+.followInfo {
+  display: flex;
+  gap: 16px;
+}
+
+.followItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.followCount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #14171a;
+}
+
+.followLabel {
+  font-size: 14px;
+  color: #657786;
+}

@@ -1,176 +1,104 @@
 .container {
+  min-height: 100vh;
+  background: #f7f9fa;
+  padding: 20px;
+}
+
+.layout {
+  display: flex;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #14171a;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: #657786;
+  font-size: 16px;
+  margin: 0;
 }
 
 .loading {
   text-align: center;
+  padding: 40px 20px;
+  color: #657786;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.profileCard {
-  background-color: #ffffff;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.profileHeader {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.avatar {
-  width: 4rem;
-  height: 4rem;
-  background-color: #3b82f6;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.profileInfo {
-  flex: 1;
-}
-
-.profileName {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 0.25rem;
-}
-
-.profileEmail {
-  color: #6b7280;
-  margin-bottom: 0.5rem;
-}
-
-.adminBadge {
-  display: inline-block;
-  background-color: #dbeafe;
-  color: #1e40af;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 9999px;
-}
-
-.statsGrid {
-  margin-top: 1.5rem;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  text-align: center;
-}
-
-@media (max-width: 640px) {
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .sidebar {
+    width: 100%;
+    order: 2;
+  }
+  
+  .main {
+    order: 1;
+  }
+  
+  .header {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
   }
 }
 
-.statItem {
-  padding: 0.5rem;
-}
-
-.statNumber {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #111827;
-}
-
-.statLabel {
-  color: #6b7280;
-  font-size: 0.875rem;
-}
-
-.tabContainer {
-  margin-bottom: 1.5rem;
-}
-
-.tabList {
-  display: flex;
-  gap: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.tab {
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  background: none;
-  transition: color 0.2s;
-}
-
-.tabActive {
-  color: #2563eb;
-  border-bottom: 2px solid #2563eb;
-}
-
-.tabInactive {
-  color: #6b7280;
-}
-
-.tabInactive:hover {
-  color: #111827;
-}
-
-.contentGrid {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.emptyState {
-  text-align: center;
-  padding: 3rem 0;
-}
-
-.emptyText {
-  color: #6b7280;
-}
-
-.userCard {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  transition: box-shadow 0.2s;
-}
-
-.userCard:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.userInfo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.userAvatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: #3b82f6;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 700;
-}
-
-.userName {
-  font-weight: 600;
-  color: #111827;
-}
-
-.userEmail {
-  font-size: 0.875rem;
-  color: #6b7280;
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+  
+  .layout {
+    gap: 12px;
+  }
+  
+  .header {
+    padding: 16px;
+  }
+  
+  .title {
+    font-size: 22px;
+  }
 }

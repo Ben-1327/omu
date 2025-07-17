@@ -1,0 +1,103 @@
+.container {
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e1e8ed;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.tab {
+  flex: 1;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.tab:hover {
+  background: #f7f9fa;
+}
+
+.tab.active {
+  border-bottom-color: #1d9bf0;
+}
+
+.tab.active .tabLabel {
+  color: #1d9bf0;
+  font-weight: 600;
+}
+
+.tabLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #14171a;
+  margin-bottom: 2px;
+}
+
+.tabDescription {
+  font-size: 12px;
+  color: #657786;
+}
+
+.content {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #657786;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #657786;
+}
+
+.posts {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.postItem {
+  margin-bottom: 16px;
+}
+
+.postItem:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    flex-direction: column;
+  }
+  
+  .tab {
+    border-bottom: 1px solid #e1e8ed;
+    border-right: none;
+  }
+  
+  .tab.active {
+    border-bottom-color: #1d9bf0;
+    border-right-color: transparent;
+  }
+  
+  .posts {
+    padding: 16px;
+  }
+}

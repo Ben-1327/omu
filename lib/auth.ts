@@ -92,7 +92,6 @@ export const authOptions = {
                 id: user.id,
                 email: user.email as string,
                 username: finalUsername,
-                name: user.name,
                 image: user.image,
                 emailVerified: new Date(),
                 isAdmin: false,

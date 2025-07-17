@@ -1,0 +1,183 @@
+.container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 24px;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.profileCard {
+  padding: 24px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #1d9bf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 24px;
+  margin-right: 16px;
+}
+
+.profileInfo {
+  flex: 1;
+}
+
+.profileName {
+  font-size: 18px;
+  font-weight: 600;
+  color: #14171a;
+  margin: 0 0 4px 0;
+}
+
+.profileHandle {
+  color: #657786;
+  font-size: 14px;
+  margin: 0 0 8px 0;
+}
+
+.adminBadge {
+  background: #ff6b6b;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  padding: 16px 0;
+  border-top: 1px solid #e1e8ed;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  font-size: 20px;
+  font-weight: 600;
+  color: #14171a;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #657786;
+  margin-top: 4px;
+}
+
+.editButton {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: #fff;
+  border: 1px solid #cfd9de;
+  border-radius: 20px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  color: #0f1419;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.editButton:hover {
+  background: #f7f9fa;
+}
+
+.followButton {
+  width: 100%;
+  padding: 10px 16px;
+  background: #1d9bf0;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.followButton:hover {
+  background: #1a8cd8;
+}
+
+.section {
+  padding: 20px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #14171a;
+  margin: 0 0 16px 0;
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detailItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detailLabel {
+  font-size: 14px;
+  color: #657786;
+  font-weight: 500;
+}
+
+.detailValue {
+  font-size: 14px;
+  color: #14171a;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.activityCount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d9bf0;
+}
+
+.activityLabel {
+  font-size: 14px;
+  color: #657786;
+}

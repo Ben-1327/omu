@@ -1,0 +1,187 @@
+.container {
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #e1e8ed;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.tab {
+  flex: 1;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.tab:hover {
+  background: #f7f9fa;
+}
+
+.tab.active {
+  border-bottom-color: #1d9bf0;
+}
+
+.tab.active .tabLabel {
+  color: #1d9bf0;
+  font-weight: 600;
+}
+
+.tabLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #14171a;
+}
+
+.tabCount {
+  font-size: 12px;
+  color: #657786;
+  font-weight: 400;
+}
+
+.tab.active .tabCount {
+  color: #1d9bf0;
+}
+
+.content {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #657786;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #657786;
+}
+
+.postsGrid {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.postItem {
+  margin-bottom: 16px;
+}
+
+.postItem:last-child {
+  margin-bottom: 0;
+}
+
+.usersGrid {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.userCard {
+  background: #fff;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow 0.2s;
+}
+
+.userCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #1d9bf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #14171a;
+  margin-bottom: 4px;
+}
+
+.userHandle {
+  font-size: 14px;
+  color: #657786;
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    flex-wrap: wrap;
+  }
+  
+  .tab {
+    flex: 1;
+    min-width: 50%;
+    padding: 12px 16px;
+  }
+  
+  .tabLabel {
+    font-size: 13px;
+  }
+  
+  .tabCount {
+    font-size: 11px;
+  }
+  
+  .postsGrid {
+    padding: 16px;
+  }
+  
+  .usersGrid {
+    padding: 16px;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab {
+    padding: 10px 12px;
+  }
+  
+  .tabLabel {
+    font-size: 12px;
+  }
+  
+  .tabCount {
+    font-size: 10px;
+  }
+}

@@ -16,7 +16,6 @@ export async function GET() {
       select: {
         id: true,
         username: true,
-        name: true,
         email: true,
         image: true,
         createdAt: true,
@@ -50,15 +49,11 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const { username, name } = await request.json()
+    const { username } = await request.json()
 
     // バリデーション
     if (!username || username.trim().length < 2) {
       return NextResponse.json({ error: 'ユーザー名は2文字以上で入力してください' }, { status: 400 })
-    }
-
-    if (!name || name.trim().length < 1) {
-      return NextResponse.json({ error: '名前を入力してください' }, { status: 400 })
     }
 
     // ユーザー名の重複チェック（自分以外）
@@ -78,13 +73,11 @@ export async function PUT(request: NextRequest) {
       where: { id: session.user.id },
       data: {
         username: username.trim().toLowerCase(),
-        name: name.trim(),
         updatedAt: new Date()
       },
       select: {
         id: true,
         username: true,
-        name: true,
         email: true,
         image: true,
         createdAt: true,
