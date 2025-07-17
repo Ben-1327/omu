@@ -8,6 +8,7 @@ import styles from './ProfileSidebar.module.css'
 interface User {
   id: string
   username: string
+  userId: string
   email: string
   image?: string
   createdAt: string
@@ -79,7 +80,7 @@ export default function ProfileSidebar({ userId }: ProfileSidebarProps) {
           </div>
           <div className={styles.profileInfo}>
             <h2 className={styles.profileName}>{user.username}</h2>
-            <p className={styles.profileHandle}>@{user.username}</p>
+            <p className={styles.profileHandle}>@{user.userId}</p>
             {user.isAdmin && (
               <span className={styles.adminBadge}>管理者</span>
             )}
@@ -126,7 +127,7 @@ export default function ProfileSidebar({ userId }: ProfileSidebarProps) {
           </div>
           <div className={styles.detailItem}>
             <span className={styles.detailLabel}>ID:</span>
-            <span className={styles.detailValue}>@{user.username}</span>
+            <span className={styles.detailValue}>@{user.userId}</span>
           </div>
         </div>
       </div>

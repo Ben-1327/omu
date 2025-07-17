@@ -12,7 +12,8 @@ datasource db {
 
 model User {
   id            String      @id @default(cuid())
-  username      String      @unique
+  username      String      @unique // 表示名（ユーザー名）
+  userId        String      @unique @map("user_id") // ユーザーID（@付きで表示）
   email         String      @unique
   emailVerified DateTime?
   image         String?

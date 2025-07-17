@@ -38,20 +38,6 @@ export default function Header() {
                 >
                   {session.user.name}
                 </Link>
-                <Link 
-                  href="/settings" 
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  設定
-                </Link>
-                {session.user.isAdmin && (
-                  <Link 
-                    href="/admin" 
-                    className="text-blue-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    管理者
-                  </Link>
-                )}
                 <button
                   onClick={() => signOut()}
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"

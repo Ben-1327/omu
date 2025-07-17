@@ -56,6 +56,7 @@ export const authOptions = {
           id: user.id,
           email: user.email,
           name: user.username,
+          userId: user.userId,
           isAdmin: user.isAdmin,
         }
       },
@@ -86,12 +87,21 @@ export const authOptions = {
               counter++
             }
 
+            // userIdの重複を回避（usernameと同じ値を使用）
+            let finalUserId = finalUsername
+            let userIdCounter = 1
+            while (await prisma.user.findUnique({ where: { userId: finalUserId } })) {
+              finalUserId = `${finalUsername}${userIdCounter}`
+              userIdCounter++
+            }
+
             // ユーザーを作成
             await prisma.user.create({
               data: {
                 id: user.id,
                 email: user.email as string,
                 username: finalUsername,
+                userId: finalUserId,
                 image: user.image,
                 emailVerified: new Date(),
                 isAdmin: false,
@@ -108,13 +118,32 @@ export const authOptions = {
     async jwt({ token, user }: { token: JWT; user?: unknown }) {
       if (user && typeof user === 'object' && user !== null) {
         token.isAdmin = (user as { isAdmin?: boolean }).isAdmin
+        token.userId = (user as { userId?: string }).userId
       }
+      
+      // OAuth認証の場合、DBからユーザー情報を取得
+      if (token.sub && !token.userId) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.sub },
+            select: { userId: true, isAdmin: true }
+          })
+          if (dbUser) {
+            token.userId = dbUser.userId
+            token.isAdmin = dbUser.isAdmin
+          }
+        } catch (error) {
+          console.error('Error fetching user data in JWT callback:', error)
+        }
+      }
+      
       return token
     },
     async session({ session, token }: { session: Session; token?: JWT }) {
       if (token) {
-        (session.user as { id: string; isAdmin: boolean }).id = token.sub as string
-        (session.user as { id: string; isAdmin: boolean }).isAdmin = token.isAdmin as boolean
+        (session.user as { id: string; isAdmin: boolean; userId: string }).id = token.sub as string
+        (session.user as { id: string; isAdmin: boolean; userId: string }).isAdmin = token.isAdmin as boolean
+        (session.user as { id: string; isAdmin: boolean; userId: string }).userId = token.userId as string
       }
       return session
     },

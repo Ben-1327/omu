@@ -9,6 +9,7 @@ import styles from './signup.module.css'
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
     username: '',
+    userId: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -37,6 +38,7 @@ export default function SignUpPage() {
         },
         body: JSON.stringify({
           username: formData.username,
+          userId: formData.userId,
           email: formData.email,
           password: formData.password
         })
@@ -117,7 +119,7 @@ export default function SignUpPage() {
           <div className={styles.fieldsContainer}>
             <div className={styles.field}>
               <label htmlFor="username" className={styles.label}>
-                ユーザー名
+                ユーザー名（表示名）
               </label>
               <input
                 id="username"
@@ -127,8 +129,27 @@ export default function SignUpPage() {
                 value={formData.username}
                 onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
                 className={styles.input}
-                placeholder="ユーザー名"
+                placeholder="山田太郎"
               />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="userId" className={styles.label}>
+                ユーザーID
+              </label>
+              <input
+                id="userId"
+                name="userId"
+                type="text"
+                required
+                value={formData.userId}
+                onChange={(e) => setFormData(prev => ({ ...prev, userId: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))}
+                className={styles.input}
+                placeholder="yamada_taro"
+              />
+              <p className={styles.fieldHint}>
+                英数字とアンダースコアのみ使用可能。表示時は@が付きます。
+              </p>
             </div>
 
             <div className={styles.field}>

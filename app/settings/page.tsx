@@ -8,6 +8,7 @@ import styles from './settings.module.css'
 interface User {
   id: string
   username: string
+  userId: string
   email: string
   image?: string
   createdAt: string
@@ -28,7 +29,8 @@ export default function SettingsPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [formData, setFormData] = useState({
-    username: ''
+    username: '',
+    userId: ''
   })
 
   useEffect(() => {
@@ -49,7 +51,8 @@ export default function SettingsPage() {
         const userData = await response.json()
         setUser(userData)
         setFormData({
-          username: userData.username
+          username: userData.username,
+          userId: userData.userId
         })
       } else {
         setError('ユーザー情報の取得に失敗しました')
@@ -83,7 +86,11 @@ export default function SettingsPage() {
         setUser(data)
         setSuccess('プロフィールを更新しました')
         // セッションを更新
-        await update({ name: data.username })
+        await update({ name: data.username, userId: data.userId })
+        // マイページにリダイレクト
+        setTimeout(() => {
+          router.push('/profile')
+        }, 1000)
       } else {
         setError(data.error || 'プロフィールの更新に失敗しました')
       }
@@ -175,7 +182,7 @@ export default function SettingsPage() {
 
             <div className={styles.field}>
               <label htmlFor="username" className={styles.label}>
-                ユーザー名
+                ユーザー名（表示名）
               </label>
               <input
                 type="text"
@@ -184,12 +191,32 @@ export default function SettingsPage() {
                 value={formData.username}
                 onChange={handleChange}
                 className={styles.input}
-                placeholder="ユーザー名"
+                placeholder="山田太郎"
                 required
                 minLength={2}
               />
               <p className={styles.fieldDescription}>
-                2文字以上の英数字で入力してください
+                投稿やコメントで表示される名前です
+              </p>
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="userId" className={styles.label}>
+                ユーザーID
+              </label>
+              <input
+                type="text"
+                id="userId"
+                name="userId"
+                value={formData.userId}
+                onChange={(e) => setFormData(prev => ({ ...prev, userId: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))}
+                className={styles.input}
+                placeholder="yamada_taro"
+                required
+                minLength={2}
+              />
+              <p className={styles.fieldDescription}>
+                英数字とアンダースコアのみ使用可能。表示時は@が付きます（@{formData.userId}）
               </p>
             </div>
 

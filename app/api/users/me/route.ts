@@ -16,6 +16,7 @@ export async function GET() {
       select: {
         id: true,
         username: true,
+        userId: true,
         email: true,
         image: true,
         createdAt: true,
@@ -49,35 +50,58 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const { username } = await request.json()
+    const { username, userId } = await request.json()
 
     // バリデーション
     if (!username || username.trim().length < 2) {
       return NextResponse.json({ error: 'ユーザー名は2文字以上で入力してください' }, { status: 400 })
     }
 
+    if (!userId || userId.trim().length < 2) {
+      return NextResponse.json({ error: 'ユーザーIDは2文字以上で入力してください' }, { status: 400 })
+    }
+
+    // ユーザーIDの形式チェック
+    if (!/^[a-z0-9_]+$/.test(userId)) {
+      return NextResponse.json({ error: 'ユーザーIDは英数字とアンダースコアのみ使用可能です' }, { status: 400 })
+    }
+
     // ユーザー名の重複チェック（自分以外）
-    const existingUser = await prisma.user.findFirst({
+    const existingUserByName = await prisma.user.findFirst({
       where: {
-        username: username.trim().toLowerCase(),
+        username: username.trim(),
         id: { not: session.user.id }
       }
     })
 
-    if (existingUser) {
+    if (existingUserByName) {
       return NextResponse.json({ error: 'このユーザー名は既に使用されています' }, { status: 400 })
+    }
+
+    // ユーザーIDの重複チェック（自分以外）
+    const existingUserById = await prisma.user.findFirst({
+      where: {
+        userId: userId.trim(),
+        id: { not: session.user.id }
+      }
+    })
+
+    if (existingUserById) {
+      return NextResponse.json({ error: 'このユーザーIDは既に使用されています' }, { status: 400 })
     }
 
     // ユーザー情報を更新
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
       data: {
-        username: username.trim().toLowerCase(),
+        username: username.trim(),
+        userId: userId.trim(),
         updatedAt: new Date()
       },
       select: {
         id: true,
         username: true,
+        userId: true,
         email: true,
         image: true,
         createdAt: true,

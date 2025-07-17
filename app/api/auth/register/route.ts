@@ -5,15 +5,20 @@ import bcrypt from 'bcryptjs'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { username, email, password } = body
+    const { username, userId, email, password } = body
 
     // バリデーション
-    if (!username || !email || !password) {
+    if (!username || !userId || !email || !password) {
       return NextResponse.json({ error: '全ての項目を入力してください' }, { status: 400 })
     }
 
     if (password.length < 6) {
       return NextResponse.json({ error: 'パスワードは6文字以上で入力してください' }, { status: 400 })
+    }
+
+    // ユーザーIDの形式チェック
+    if (!/^[a-z0-9_]+$/.test(userId)) {
+      return NextResponse.json({ error: 'ユーザーIDは英数字とアンダースコアのみ使用可能です' }, { status: 400 })
     }
 
     // ユーザー名の重複チェック
@@ -23,6 +28,15 @@ export async function POST(request: NextRequest) {
 
     if (existingUsername) {
       return NextResponse.json({ error: 'このユーザー名は既に使用されています' }, { status: 400 })
+    }
+
+    // ユーザーIDの重複チェック
+    const existingUserId = await prisma.user.findUnique({
+      where: { userId }
+    })
+
+    if (existingUserId) {
+      return NextResponse.json({ error: 'このユーザーIDは既に使用されています' }, { status: 400 })
     }
 
     // メールアドレスの重複チェック
@@ -41,7 +55,7 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.create({
       data: {
         username,
-        name: username,
+        userId,
         email,
         passwordHash: hashedPassword,
         isAdmin: false
@@ -49,7 +63,7 @@ export async function POST(request: NextRequest) {
       select: {
         id: true,
         username: true,
-        name: true,
+        userId: true,
         email: true,
         isAdmin: true
       }
