@@ -23,6 +23,7 @@ function SearchPageContent() {
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const [type, setType] = useState(searchParams.get('type') || 'all')
   const [sort, setSort] = useState(searchParams.get('sort') || 'new')
+  const [tag, setTag] = useState(searchParams.get('tag') || '')
 
   const performSearch = useCallback(async () => {
     setLoading(true)
@@ -33,6 +34,10 @@ function SearchPageContent() {
         sort,
         limit: '20'
       })
+      
+      if (tag) {
+        params.append('tag', tag)
+      }
 
       const response = await fetch(`/api/search?${params}`)
       if (response.ok) {
@@ -44,13 +49,13 @@ function SearchPageContent() {
     } finally {
       setLoading(false)
     }
-  }, [query, type, sort])
+  }, [query, type, sort, tag])
 
   useEffect(() => {
-    if (query || type !== 'all') {
+    if (query || type !== 'all' || tag) {
       performSearch()
     }
-  }, [query, type, sort, performSearch])
+  }, [query, type, sort, tag, performSearch])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -116,7 +121,7 @@ function SearchPageContent() {
           posts.map((post) => (
             <PostCard key={post.id} post={post} />
           ))
-        ) : (query || type !== 'all') ? (
+        ) : (query || type !== 'all' || tag) ? (
           <div className={styles.emptyState}>
             <p className={styles.emptyText}>検索結果が見つかりませんでした。</p>
           </div>

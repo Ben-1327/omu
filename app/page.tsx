@@ -1,5 +1,5 @@
 import HorizontalSlider from '@/components/home/HorizontalSlider'
-import PopularSection from '@/components/home/PopularSection'
+import TagCategorySection from '@/components/home/TagCategorySection'
 import styles from './page.module.css'
 
 export default function Home() {
@@ -23,15 +23,9 @@ export default function Home() {
           <HorizontalSlider title="💬 人気の会話" type="conversation" limit={8} />
         </div>
 
-        {/* 従来のグリッドセクション（サマリー用） */}
-        <div className={styles.gridSection}>
-          <h2 className={styles.sectionTitle}>カテゴリー別サマリー</h2>
-          <div className={styles.grid}>
-            <PopularSection title="全体人気" type="all" />
-            <PopularSection title="記事人気" type="article" />
-            <PopularSection title="プロンプト人気" type="prompt" />
-            <PopularSection title="会話人気" type="conversation" />
-          </div>
+        {/* タグ別記事セクション */}
+        <div className={styles.categorySection}>
+          <TagCategorySection />
         </div>
       </div>
     </div>

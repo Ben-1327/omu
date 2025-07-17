@@ -9,7 +9,7 @@ export default function LeftSidebar() {
 
   return (
     <aside className="hidden lg:block w-64 flex-shrink-0 pr-4">
-      <div className="pt-16 space-y-8">
+      <div className="pt-24 space-y-8">
         {/* タグランキング */}
         <TagRankingSection limit={8} />
         

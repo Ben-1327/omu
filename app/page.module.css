@@ -33,6 +33,13 @@
   gap: 2rem;
 }
 
+.categorySection {
+  margin-top: 2rem;
+  padding: 2rem 0;
+  background-color: #f8fafc;
+  border-radius: 1rem;
+}
+
 .gridSection {
   margin-top: 2rem;
 }
