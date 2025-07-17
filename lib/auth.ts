@@ -7,6 +7,7 @@ import { prisma } from './prisma'
 import bcrypt from 'bcryptjs'
 import type { JWT } from 'next-auth/jwt'
 import type { Session } from 'next-auth'
+import type { Account, Profile } from 'next-auth'
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -61,6 +62,50 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }: { user: any; account: Account | null; profile?: Profile }) {
+      if (account?.provider === 'google' || account?.provider === 'github') {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email as string }
+          })
+
+          if (!existingUser) {
+            // OAuth認証の場合、usernameを生成
+            let username = ''
+            if (account?.provider === 'google') {
+              username = (profile as { name?: string })?.name || user.name || user.email?.split('@')[0] || 'user'
+            } else if (account?.provider === 'github') {
+              username = (profile as { login?: string })?.login || user.name || user.email?.split('@')[0] || 'user'
+            }
+            
+            // usernameの重複を回避
+            let finalUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '')
+            let counter = 1
+            while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
+              finalUsername = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}${counter}`
+              counter++
+            }
+
+            // ユーザーを作成
+            await prisma.user.create({
+              data: {
+                id: user.id,
+                email: user.email as string,
+                username: finalUsername,
+                name: user.name,
+                image: user.image,
+                emailVerified: new Date(),
+                isAdmin: false,
+              }
+            })
+          }
+        } catch (error) {
+          console.error('OAuth user creation error:', error)
+          return false
+        }
+      }
+      return true
+    },
     async jwt({ token, user }: { token: JWT; user?: unknown }) {
       if (user && typeof user === 'object' && user !== null) {
         token.isAdmin = (user as { isAdmin?: boolean }).isAdmin

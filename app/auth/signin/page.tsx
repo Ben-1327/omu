@@ -45,9 +45,22 @@ export default function SignInPage() {
 
   const handleOAuthSignIn = async (provider: 'google' | 'github') => {
     setLoading(true)
+    setError('')
     try {
-      await signIn(provider, { callbackUrl: '/' })
-    } catch {
+      const result = await signIn(provider, { 
+        callbackUrl: '/',
+        redirect: false 
+      })
+      
+      if (result?.error) {
+        setError(`${provider === 'google' ? 'Google' : 'GitHub'}認証に失敗しました`)
+        setLoading(false)
+      } else if (result?.ok) {
+        // 認証成功時は自動的にリダイレクト
+        window.location.href = result.url || '/'
+      }
+    } catch (error) {
+      console.error('OAuth sign in error:', error)
       setError('認証に失敗しました')
       setLoading(false)
     }
