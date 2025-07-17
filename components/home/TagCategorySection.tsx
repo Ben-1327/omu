@@ -171,26 +171,26 @@ export default function TagCategorySection({ className }: TagCategorySectionProp
             </span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-            {(tagPosts[tag.id] || []).map((post) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {(tagPosts[tag.id] || []).slice(0, 10).map((post) => (
               <Link
                 key={post.id}
                 href={`/posts/${post.id}`}
-                className="block bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200 p-4"
+                className="block bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200 p-6"
               >
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <span className="text-xs">
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                      <span className="text-sm">
                         {getTypeIcon(post.type)}
                       </span>
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
+                    <h3 className="text-base font-medium text-gray-900 line-clamp-2 mb-2">
                       {post.title}
                     </h3>
-                    <div className="flex items-center text-xs text-gray-500 space-x-2">
+                    <div className="flex items-center text-sm text-gray-500 space-x-2">
                       <span>{post.user.username}</span>
                       <span>•</span>
                       <span>{formatTimeAgo(post.createdAt)}</span>

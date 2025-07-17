@@ -95,7 +95,7 @@ export default function UserRankingSection({
         {rankings.map((user) => (
           <Link
             key={user.id}
-            href={`/users/${user.username}`}
+            href={`/users/${user.id}`}
             className="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center space-x-3">

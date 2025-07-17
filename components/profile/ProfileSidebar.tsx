@@ -44,10 +44,13 @@ export default function ProfileSidebar({ userId }: ProfileSidebarProps) {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('/api/users/me')
+      const endpoint = userId ? `/api/users/${userId}` : '/api/users/me'
+      const response = await fetch(endpoint)
       if (response.ok) {
         const userData = await response.json()
         setUser(userData)
+      } else {
+        console.error('ユーザー情報の取得に失敗しました')
       }
     } catch (error) {
       console.error('ユーザー情報取得エラー:', error)

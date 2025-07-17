@@ -13,15 +13,16 @@ export async function GET(
       return NextResponse.json({ error: 'ユーザーIDが必要です' }, { status: 400 })
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    // usernameまたはuserIdで検索を試行
+    let user = await prisma.user.findUnique({
+      where: { username: userId },
       select: {
         id: true,
         username: true,
-        name: true,
-        email: false, // プライバシー保護のためemailは非表示
+        userId: true,
         image: true,
         createdAt: true,
+        isAdmin: true,
         _count: {
           select: {
             posts: true,
@@ -31,6 +32,50 @@ export async function GET(
         }
       }
     })
+
+    // usernameで見つからない場合、userIdで検索
+    if (!user) {
+      user = await prisma.user.findUnique({
+        where: { userId: userId },
+        select: {
+          id: true,
+          username: true,
+          userId: true,
+          image: true,
+          createdAt: true,
+          isAdmin: true,
+          _count: {
+            select: {
+              posts: true,
+              followers: true,
+              following: true
+            }
+          }
+        }
+      })
+    }
+
+    // それでも見つからない場合、idで検索
+    if (!user) {
+      user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          username: true,
+          userId: true,
+          image: true,
+          createdAt: true,
+          isAdmin: true,
+          _count: {
+            select: {
+              posts: true,
+              followers: true,
+              following: true
+            }
+          }
+        }
+      })
+    }
 
     if (!user) {
       return NextResponse.json({ error: 'ユーザーが見つかりません' }, { status: 404 })
