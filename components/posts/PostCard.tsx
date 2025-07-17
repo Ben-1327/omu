@@ -42,8 +42,8 @@ export default function PostCard({ post }: PostCardProps) {
  }
 
  return (
-  <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200">
-   <div className="p-6">
+  <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 h-48 flex flex-col">
+   <div className="p-6 flex-1 flex flex-col">
     <div className="flex items-start justify-between mb-3">
      <div className="flex items-center space-x-2">
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(post.type)}`}>
@@ -60,19 +60,19 @@ export default function PostCard({ post }: PostCardProps) {
      </span>
     </div>
 
-    <Link href={`/posts/${post.id}`} className="block">
-     <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 ">
+    <Link href={`/posts/${post.id}`} className="block flex-1">
+     <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 line-clamp-2">
       {post.title}
      </h3>
      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
       {(post.type === 'prompt' || post.type === 'conversation') && post.description 
-        ? post.description.substring(0, 150) + '...'
-        : post.content ? post.content.substring(0, 150) + '...' : ''
+        ? post.description.substring(0, 100) + '...'
+        : post.content ? post.content.substring(0, 100) + '...' : ''
       }
      </p>
     </Link>
 
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between mt-auto">
      <div className="flex items-center space-x-2">
       <Link href={`/users/${post.user.id}`} className="text-sm text-gray-500 hover:text-gray-800 hover:underline">
        by {post.user.username}
@@ -83,7 +83,7 @@ export default function PostCard({ post }: PostCardProps) {
      </div>
      
      <div className="flex flex-wrap gap-1">
-      {post.postTags.slice(0, 3).map(({ tag }) => (
+      {post.postTags.slice(0, 2).map(({ tag }) => (
        <span
         key={tag.id}
         className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
@@ -91,9 +91,9 @@ export default function PostCard({ post }: PostCardProps) {
         #{tag.name}
        </span>
       ))}
-      {post.postTags.length > 3 && (
+      {post.postTags.length > 2 && (
        <span className="text-xs text-gray-500 ">
-        +{post.postTags.length - 3}
+        +{post.postTags.length - 2}
        </span>
       )}
      </div>

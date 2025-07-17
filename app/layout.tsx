@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import LeftSidebar from "@/components/layout/LeftSidebar";
+// import RightSidebar from "@/components/layout/RightSidebar"; // 将来の拡張用
 import AuthProvider from "@/components/providers/SessionProvider";
 
 const geistSans = Geist({
@@ -38,9 +40,13 @@ export default function RootLayout({
       >
         <AuthProvider>
           <Header />
-          <main className="flex-1">
-            {children}
-          </main>
+          <div className="flex flex-1 max-w-7xl mx-auto w-full">
+            <LeftSidebar />
+            <main className="flex-1 min-w-0 px-4">
+              {children}
+            </main>
+            {/* <RightSidebar /> */} {/* 将来の拡張用 */}
+          </div>
           <Footer />
         </AuthProvider>
       </body>
