@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
   try {
     const where: {
       OR?: Array<{
-        title?: { contains: string; mode: 'insensitive' };
-        content?: { contains: string; mode: 'insensitive' };
+        title?: { contains: string };
+        content?: { contains: string };
       }>;
       type?: 'article' | 'prompt' | 'conversation';
       postTags?: {
@@ -26,11 +26,11 @@ export async function GET(request: NextRequest) {
       };
     } = {}
 
-    // テキスト検索
+    // テキスト検索 (SQLite向け - LIKE演算子を使用してcase-insensitive検索)
     if (query) {
       where.OR = [
-        { title: { contains: query, mode: 'insensitive' } },
-        { content: { contains: query, mode: 'insensitive' } }
+        { title: { contains: query } },
+        { content: { contains: query } }
       ]
     }
 
