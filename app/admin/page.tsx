@@ -275,7 +275,7 @@ export default function AdminPage() {
               <div className={styles.cardHeader}>
                 <h2 className={styles.cardTitle}>新規ユーザー作成</h2>
               </div>
-              <div style={{ padding: '1.5rem' }}>
+              <div className={styles.formContainer}>
                 <form onSubmit={handleCreateUserSubmit} className={styles.form}>
                   <div className={styles.formGroup}>
                     <label htmlFor="username" className={styles.label}>

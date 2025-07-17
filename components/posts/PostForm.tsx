@@ -275,15 +275,7 @@ export default function PostForm() {
               visibleDragbar={false}
               textareaProps={{
                 placeholder: 'Markdownで記述してください',
-                style: {
-                  fontSize: 16,
-                  lineHeight: 1.6,
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  backgroundColor: '#ffffff',
-                  color: '#2d3748',
-                  border: 'none',
-                  outline: 'none',
-                },
+                className: styles.mdEditorTextarea,
               }}
               previewOptions={{
                 remarkPlugins: [remarkBreaks],
