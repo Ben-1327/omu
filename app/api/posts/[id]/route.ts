@@ -74,9 +74,9 @@ export async function PUT(
     }
 
     // トランザクション処理
-    const updatedPost = await prisma.$transaction(async (prisma) => {
+    const updatedPost = await prisma.$transaction(async (tx) => {
       // 投稿更新
-      const post = await prisma.post.update({
+      const post = await tx.post.update({
         where: { id: parseInt(resolvedParams.id) },
         data: {
           title,
@@ -106,20 +106,20 @@ export async function PUT(
       })
 
       // 既存のタグ関連付けを削除
-      await prisma.postTag.deleteMany({
+      await tx.postTag.deleteMany({
         where: { postId: parseInt(resolvedParams.id) }
       })
 
       // 新しいタグ処理
       if (tags && tags.length > 0) {
         for (const tagName of tags) {
-          const tag = await prisma.tag.upsert({
+          const tag = await tx.tag.upsert({
             where: { name: tagName },
             update: {},
             create: { name: tagName }
           })
 
-          await prisma.postTag.create({
+          await tx.postTag.create({
             data: {
               postId: parseInt(resolvedParams.id),
               tagId: tag.id
