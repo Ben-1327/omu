@@ -31,6 +31,12 @@ async function main() {
       email: 'admin@example.com',
       passwordHash: adminPassword,
       isAdmin: true,
+      // @ts-ignore
+      role: 'admin' as const,
+      adFree: true,
+      bio: 'AI技術と開発の専門家。Next.js、TypeScript、AIを活用したモダンな開発手法を得意としています。',
+      website: 'https://example.com',
+      xLink: 'https://x.com/admin_taro',
       image: null,
     },
   })
@@ -43,6 +49,12 @@ async function main() {
       email: 'user@example.com',
       passwordHash: userPassword,
       isAdmin: false,
+      // @ts-ignore
+      role: 'user' as const,
+      adFree: false,
+      bio: 'AI技術に興味があり、日々の業務でChatGPTやClaudeを活用している会社員です。技術記事の執筆も趣味です。',
+      website: 'https://hanako-blog.example.com',
+      xLink: 'https://x.com/ai_lover_hanako',
       image: null,
     },
   })
@@ -126,6 +138,9 @@ Next.js 15とAIを組み合わせることで、より動的で知的なWebア�
       description: null,
       platform: null,
       link: null,
+      viewCount: 245,
+      likeCount: 0,
+      visibility: 'public' as const,
       userId: adminUser.id,
       tagIds: [tags[3].id, tags[4].id, tags[5].id], // Next.js, TypeScript, AI活用
     },
@@ -153,6 +168,9 @@ Next.js 15とAIを組み合わせることで、より動的で知的なWebア�
       description: 'ChatGPTやClaudeでコードレビューを依頼する際に使える包括的なプロンプトです。シニアエンジニアの視点で詳細なフィードバックが得られます。',
       platform: null,
       link: null,
+      viewCount: 187,
+      likeCount: 0,
+      visibility: 'public' as const,
       userId: adminUser.id,
       tagIds: [tags[0].id, tags[2].id, tags[7].id, tags[9].id], // ChatGPT, プロンプトエンジニアリング, コード生成, デバッグ
     },
@@ -165,6 +183,9 @@ Next.js 15とAIを組み合わせることで、より動的で知的なWebア�
       description: 'Next.jsアプリケーションをDocker化する際の設定方法について、Claude と詳しく議論しました。マルチステージビルドやdevcontainerの活用法など実践的な内容です。',
       platform: 'Claude',
       link: 'https://claude.ai/chat/example-conversation-1',
+      viewCount: 156,
+      likeCount: 0,
+      visibility: 'public' as const,
       userId: adminUser.id,
       tagIds: [tags[1].id, tags[3].id, tags[6].id], // Claude, Next.js, 生産性向上
     },
@@ -214,6 +235,9 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
       description: null,
       platform: null,
       link: null,
+      viewCount: 342,
+      likeCount: 0,
+      visibility: 'public' as const,
       userId: regularUser.id,
       tagIds: [tags[0].id, tags[5].id, tags[6].id, tags[8].id], // ChatGPT, AI活用, 生産性向上, 文章作成
     },
@@ -241,6 +265,9 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
       description: 'Qiitaやブログで技術記事を書く際の構成を考えてもらうプロンプトです。対象読者に応じて適切な構成を提案してくれます。',
       platform: null,
       link: null,
+      viewCount: 298,
+      likeCount: 0,
+      visibility: 'public' as const,
       userId: regularUser.id,
       tagIds: [tags[2].id, tags[8].id], // プロンプトエンジニアリング, 文章作成
     },
@@ -253,6 +280,9 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
       description: 'TypeScriptでより型安全なコードを書くためのテクニックについて ChatGPT と議論しました。Generics や Union Types の活用法、型ガードの実装方法など深い内容です。',
       platform: 'ChatGPT',
       link: 'https://chat.openai.com/share/example-conversation-2',
+      viewCount: 123,
+      likeCount: 0,
+      visibility: 'public' as const,
       userId: regularUser.id,
       tagIds: [tags[0].id, tags[4].id, tags[7].id], // ChatGPT, TypeScript, コード生成
     },
@@ -281,6 +311,9 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
       description: 'プログラミングでエラーが発生した際に、AIに効果的にデバッグ支援を依頼するためのプロンプトテンプレートです。',
       platform: null,
       link: null,
+      viewCount: 89,
+      likeCount: 0,
+      visibility: 'draft' as const,
       userId: regularUser.id,
       tagIds: [tags[9].id, tags[2].id], // デバッグ, プロンプトエンジニアリング
     },
@@ -312,8 +345,10 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
   // いいねとお気に入りデータの作成
   const posts = await prisma.post.findMany()
   
-  // 管理者が一般ユーザーの投稿にいいね
+  // 管理者が一般ユーザーの投稿の最初の2件にいいね
   const userPostIds = posts.filter(p => p.userId === regularUser.id).map(p => p.id)
+  console.log(`一般ユーザーの投稿数: ${userPostIds.length}`)
+  
   for (const postId of userPostIds.slice(0, 2)) {
     await prisma.like.create({
       data: {
@@ -321,10 +356,20 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
         postId: postId,
       },
     })
+    
+    // like_countを更新
+    await prisma.post.update({
+      where: { id: postId },
+      // @ts-ignore
+      data: { likeCount: { increment: 1 } }
+    })
+    console.log(`管理者が投稿ID ${postId} にいいね`)
   }
 
-  // 一般ユーザーが管理者の投稿にいいねとお気に入り
+  // 一般ユーザーが管理者の投稿全てにいいねとお気に入り
   const adminPostIds = posts.filter(p => p.userId === adminUser.id).map(p => p.id)
+  console.log(`管理者の投稿数: ${adminPostIds.length}`)
+  
   for (const postId of adminPostIds) {
     await prisma.like.create({
       data: {
@@ -332,6 +377,14 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
         postId: postId,
       },
     })
+    
+    // like_countを更新
+    await prisma.post.update({
+      where: { id: postId },
+      // @ts-ignore
+      data: { likeCount: { increment: 1 } }
+    })
+    console.log(`一般ユーザーが投稿ID ${postId} にいいね`)
     
     // 最初の投稿をお気に入りに追加
     if (postId === adminPostIds[0]) {
@@ -341,6 +394,7 @@ AIを「完全に任せる」のではなく、「協働パートナー」とし
           postId: postId,
         },
       })
+      console.log(`投稿ID ${postId} をお気に入りに追加`)
     }
   }
 

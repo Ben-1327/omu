@@ -20,6 +20,11 @@ model User {
   image         String?
   passwordHash  String?     @map("password_hash")
   isAdmin       Boolean     @default(false) @map("is_admin")
+  role          UserRole    @default(user)
+  adFree        Boolean     @default(false) @map("ad_free")
+  bio           String?
+  website       String?
+  xLink         String?     @map("x_link")
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
   
@@ -34,6 +39,7 @@ model User {
   following     Follow[]    @relation("UserFollowing")
   favorites     Favorite[]
 
+  @@index([role])
   @@map("users")
 }
 
@@ -85,6 +91,9 @@ model Post {
   description String?     // for prompt posts: explanation/usage description
   platform    String?     // for conversation posts: ChatGPT | Claude | Gemini | X
   link        String?     // for conversation posts: link to original conversation
+  viewCount   Int         @default(0) @map("view_count")
+  likeCount   Int         @default(0) @map("like_count")
+  visibility  PostVisibility @default(public)
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
   
@@ -94,6 +103,9 @@ model Post {
   favorites   Favorite[]
   postTags    PostTag[]
 
+  @@index([viewCount])
+  @@index([visibility])
+  @@index([visibility, createdAt])
   @@map("posts")
 }
 
@@ -163,4 +175,17 @@ enum PostType {
   article
   prompt
   conversation
+}
+
+enum UserRole {
+  user
+  premium
+  admin
+}
+
+enum PostVisibility {
+  public
+  private
+  draft
+  followers_only
 }
