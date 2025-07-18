@@ -1,24 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Omu - 生成AI情報共有プラットフォーム
 
-## Getting Started
+生成AIのプロンプト、記事、会話履歴を共有するQiita風のWebアプリケーションです。
 
-First, run the development server:
+## 技術スタック
+
+- **Frontend**: Next.js 15.4.1 (App Router), React 19, TypeScript
+- **Database**: PostgreSQL (Prisma ORM)
+- **認証**: NextAuth.js
+- **スタイリング**: Tailwind CSS
+- **コンテナ**: Docker & Docker Compose
+
+## 開発環境のセットアップ
+
+### 方法1: Dockerを使用する（推奨）
+
+#### 前提条件
+- Docker Desktop がインストールされていること
+- Docker Compose が使用可能であること
+
+#### 1. リポジトリをクローン
+
+```bash
+git clone <repository-url>
+cd omu
+```
+
+#### 2. 環境変数の設定
+
+```bash
+# Docker用の環境変数ファイルをコピー
+cp .env.docker .env
+```
+
+#### 3. Dockerコンテナを起動
+
+```bash
+# 開発環境として起動（ホットリロード対応）
+docker-compose -f docker-compose.dev.yml up -d
+
+# または本番形式として起動
+docker-compose up -d
+```
+
+#### 4. データベースのマイグレーション
+
+```bash
+# アプリケーションコンテナ内でマイグレーション実行
+docker-compose exec app npx prisma migrate dev
+```
+
+#### 5. アプリケーションにアクセス
+
+[http://localhost:3000](http://localhost:3000) にアクセスしてください。
+
+#### Docker関連のコマンド
+
+```bash
+# 開発環境の起動
+docker-compose -f docker-compose.dev.yml up -d
+
+# 本番環境の起動
+docker-compose -f docker-compose.prod.yml up -d
+
+# ログの確認
+docker-compose logs -f
+
+# コンテナの停止
+docker-compose down
+
+# データベースを含む完全削除
+docker-compose down -v
+```
+
+### 方法2: ローカル環境で直接実行
+
+#### 前提条件
+- Node.js 20以上
+- PostgreSQL
+
+#### 1. 依存関係のインストール
+
+```bash
+npm install
+```
+
+#### 2. 環境変数の設定
+
+```bash
+cp .env.example .env
+# .envファイルを編集して適切な値を設定
+```
+
+#### 3. データベースのセットアップ
+
+```bash
+npx prisma migrate dev
+npx prisma generate
+```
+
+#### 4. 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+[http://localhost:3000](http://localhost:3000) にアクセスしてください。
 
 ## Learn More
 

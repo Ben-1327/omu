@@ -1,0 +1,47 @@
+services:
+  # PostgreSQLデータベース（開発環境）
+  db:
+    image: postgres:15-alpine
+    container_name: omu-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: omu_dev
+      POSTGRES_USER: omu_user
+      POSTGRES_PASSWORD: omu_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U omu_user -d omu_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 開発環境（ホットリロード対応）
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: omu-app-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: "postgresql://omu_user:omu_password@db:5432/omu_dev"
+      NEXTAUTH_URL: "http://localhost:3000"
+      NEXTAUTH_SECRET: "DiJeEE2tTa5QkzjXpFHkNznrer9vzitf9qlw+g7PYX8="
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # ソースコードのマウント（ホットリロード用）
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+
+volumes:
+  postgres_dev_data:
+    driver: local

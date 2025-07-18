@@ -1,0 +1,62 @@
+# 依存関係
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 環境変数ファイル
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Next.js関連ファイル
+.next/
+out/
+
+# データベースファイル
+*.db
+*.db-journal
+dev.db
+
+# ログファイル
+*.log
+logs
+
+# ランタイムデータ
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# IDE・エディタ
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# Git関連
+.git/
+.gitignore
+
+# Vercel関連
+.vercel
+
+# TypeScript関連
+*.tsbuildinfo
+next-env.d.ts
+
+# ドキュメント
+README.md
+docs/
+
+# Dockerファイル
+Dockerfile
+docker-compose*.yml
+.dockerignore
