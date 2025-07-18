@@ -2,7 +2,7 @@
   "env": {
     "PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING": "1"
   },
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run vercel-build",
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
