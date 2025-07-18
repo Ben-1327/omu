@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { ProfileImage } from '@/components/ui/OptimizedImage'
 import styles from './UserSidebar.module.css'
 
 interface User {
@@ -10,6 +11,7 @@ interface User {
   username: string
   email: string
   image?: string
+  profileImageUrl?: string
   createdAt: string
   isAdmin: boolean
   _count: {
@@ -85,9 +87,13 @@ export default function UserSidebar() {
       {/* ユーザー情報カード */}
       <div className={styles.userCard}>
         <div className={styles.userHeader}>
-          <div className={styles.avatar}>
-            {user.username?.[0]?.toUpperCase() || 'U'}
-          </div>
+          <ProfileImage
+            src={user.profileImageUrl || user.image || undefined}
+            alt={`${user.username}のプロフィール画像`}
+            size="lg"
+            fallbackInitial={user.username?.[0]?.toUpperCase() || 'U'}
+            className={styles.avatar}
+          />
           <div className={styles.userInfo}>
             <h2 className={styles.userName}>{user.username}</h2>
             <p className={styles.userHandle}>@{user.username}</p>

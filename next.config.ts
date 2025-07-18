@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   outputFileTracingIncludes: {
     '/': ['./prisma/**/*'],
+  },
+  images: {
+    domains: ['nnfwnybihekdmwuwitwy.supabase.co'],
   }
 };
 

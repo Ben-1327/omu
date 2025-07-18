@@ -18,6 +18,8 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             username: true,
+            image: true,
+            profileImageUrl: true,
           }
         },
         postTags: {
@@ -106,6 +108,8 @@ export async function POST(request: NextRequest) {
             select: {
               id: true,
               username: true,
+              image: true,
+              profileImageUrl: true,
             }
           },
           postTags: {

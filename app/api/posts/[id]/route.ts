@@ -16,6 +16,8 @@ export async function GET(
           select: {
             id: true,
             username: true,
+            image: true,
+            profileImageUrl: true,
           }
         },
         postTags: {
@@ -86,6 +88,8 @@ export async function PUT(
             select: {
               id: true,
               username: true,
+              image: true,
+              profileImageUrl: true,
             }
           },
           postTags: {

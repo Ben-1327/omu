@@ -14,6 +14,8 @@ export async function GET(
           select: {
             id: true,
             username: true,
+            image: true,
+            profileImageUrl: true,
           }
         },
         postTags: {

@@ -21,6 +21,7 @@ export async function GET(
         username: true,
         userId: true,
         image: true,
+        profileImageUrl: true,
         createdAt: true,
         isAdmin: true,
         _count: {
@@ -42,6 +43,7 @@ export async function GET(
           username: true,
           userId: true,
           image: true,
+          profileImageUrl: true,
           createdAt: true,
           isAdmin: true,
           _count: {
@@ -64,6 +66,7 @@ export async function GET(
           username: true,
           userId: true,
           image: true,
+          profileImageUrl: true,
           createdAt: true,
           isAdmin: true,
           _count: {

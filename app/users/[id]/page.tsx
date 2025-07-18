@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { User, Post, Tag } from '@prisma/client'
 import PostCard from '@/components/posts/PostCard'
 import FollowButton from '@/components/users/FollowButton'
+import { ProfileImage } from '@/components/ui/OptimizedImage'
 import styles from './user-profile.module.css'
 
 interface UserWithCounts extends User {
@@ -107,9 +108,13 @@ export default function UserProfilePage() {
     <div className={styles.container}>
       <div className={styles.profileHeader}>
         <div className={styles.userInfo}>
-          <div className={styles.avatar}>
-            {user.username[0]?.toUpperCase()}
-          </div>
+          <ProfileImage
+            src={user.profileImageUrl || user.image || undefined}
+            alt={`${user.username}のプロフィール画像`}
+            size="xl"
+            fallbackInitial={user.username[0]?.toUpperCase()}
+            className={styles.avatar}
+          />
           <div className={styles.userDetails}>
             <h1 className={styles.username}>{user.username}</h1>
             <div className={styles.stats}>

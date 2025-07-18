@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ImageUpload } from '@/components/ui/ImageUpload'
 import { ImageUploadResult } from '@/lib/image-upload'
+import { ProfileImage } from '@/components/ui/OptimizedImage'
 import styles from './settings.module.css'
 
 interface User {
@@ -157,19 +158,13 @@ export default function SettingsPage() {
           <h2 className={styles.sectionTitle}>プロフィール</h2>
           
           <div className={styles.profileInfo}>
-            <div className={styles.avatar}>
-              {(profileImageUrl || user.image) ? (
-                <img 
-                  src={profileImageUrl || user.image} 
-                  alt={`${user.username}のプロフィール画像`}
-                  className={styles.avatarImage}
-                />
-              ) : (
-                <span className={styles.avatarInitial}>
-                  {user.username?.[0]?.toUpperCase() || 'U'}
-                </span>
-              )}
-            </div>
+            <ProfileImage
+              src={profileImageUrl || user.profileImageUrl || user.image || undefined}
+              alt={`${user.username}のプロフィール画像`}
+              size="xl"
+              fallbackInitial={user.username?.[0]?.toUpperCase() || 'U'}
+              className={styles.avatar}
+            />
             <div className={styles.basicInfo}>
               <p className={styles.email}>{user.email}</p>
               <p className={styles.joinDate}>

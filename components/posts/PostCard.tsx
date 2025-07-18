@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Post, User, Tag } from '@prisma/client'
+import { ProfileImage } from '@/components/ui/OptimizedImage'
 
 interface PostCardProps {
  post: Post & {
@@ -74,8 +75,14 @@ export default function PostCard({ post }: PostCardProps) {
 
     <div className="flex items-center justify-between mt-auto pt-2">
      <div className="flex items-center space-x-2 min-w-0 flex-1">
-      <Link href={`/users/${post.user.id}`} className="text-sm text-gray-500 hover:text-gray-800 hover:underline truncate">
-       by {post.user.username}
+      <Link href={`/users/${post.user.id}`} className="flex items-center space-x-2 text-sm text-gray-500 hover:text-gray-800 hover:underline truncate">
+       <ProfileImage
+        src={post.user.profileImageUrl || post.user.image || undefined}
+        alt={`${post.user.username}のプロフィール画像`}
+        size="sm"
+        fallbackInitial={post.user.username[0]?.toUpperCase()}
+       />
+       <span className="truncate">by {post.user.username}</span>
       </Link>
       <span className="text-sm text-gray-500 flex-shrink-0">
        ♥ {post._count.likes}
