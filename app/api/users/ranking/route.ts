@@ -61,15 +61,15 @@ export async function GET(request: Request) {
       });
 
       const result = userLikes
-        .map(user => ({
+        .map((user: any) => ({
           id: user.id,
           username: user.username,
           image: user.image,
-          totalLikes: user.posts.reduce((sum, post) => sum + post._count.likes, 0)
+          totalLikes: user.posts.reduce((sum: number, post: any) => sum + post._count.likes, 0)
         }))
-        .sort((a, b) => b.totalLikes - a.totalLikes)
+        .sort((a: any, b: any) => b.totalLikes - a.totalLikes)
         .slice(0, limit)
-        .map((user, index) => ({
+        .map((user: any, index: number) => ({
           rank: index + 1,
           id: user.id,
           username: user.username,
@@ -96,7 +96,7 @@ export async function GET(request: Request) {
         take: limit
       });
 
-      const result = userRanking.map((user, index) => ({
+      const result = userRanking.map((user: any, index: number) => ({
         rank: index + 1,
         id: user.id,
         username: user.username,

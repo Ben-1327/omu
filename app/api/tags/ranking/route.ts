@@ -40,7 +40,7 @@ export async function GET(request: Request) {
       take: limit
     });
 
-    const result = tagRanking.map((tag, index) => ({
+    const result = tagRanking.map((tag: any, index: number) => ({
       rank: index + 1,
       id: tag.id,
       name: tag.name,
