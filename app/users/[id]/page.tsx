@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { User, Post, Tag } from '@prisma/client'
+import { User, Post, Tag } from '@/types/prisma'
 import PostCard from '@/components/posts/PostCard'
 import FollowButton from '@/components/users/FollowButton'
 import { ProfileImage } from '@/components/ui/OptimizedImage'
@@ -17,7 +17,20 @@ interface UserWithCounts extends User {
   }
 }
 
-interface PostWithDetails extends Post {
+interface PostWithDetails {
+  id: number
+  userId: string
+  type: 'article' | 'prompt' | 'conversation'
+  title: string
+  content?: string | null
+  description?: string | null
+  platform?: string | null
+  link?: string | null
+  viewCount: number
+  likeCount: number
+  visibility: 'public' | 'private' | 'draft' | 'followers_only'
+  createdAt: Date
+  updatedAt: Date
   user: User
   postTags: Array<{
     tag: Tag
@@ -163,7 +176,7 @@ export default function UserProfilePage() {
         <div className={styles.postsGrid}>
           {posts.length > 0 ? (
             posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <PostCard key={post.id} post={post as any} />
             ))
           ) : (
             <div className={styles.noPosts}>

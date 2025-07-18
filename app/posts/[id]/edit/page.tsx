@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { Post, Tag } from '@prisma/client'
+import { Post, Tag } from '@/types/prisma'
 import dynamic from 'next/dynamic'
 import TagInput from '@/components/ui/TagInput'
 import remarkBreaks from 'remark-breaks'

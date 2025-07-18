@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Post, User, Tag } from '@prisma/client'
+import { Post, User, Tag } from '@/types/prisma'
 import { ProfileImage } from '@/components/ui/OptimizedImage'
 
 interface PostCardProps {

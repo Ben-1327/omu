@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import PostCard from '@/components/posts/PostCard'
-import { Post, User, Tag } from '@prisma/client'
+import { Post, User, Tag } from '@/types/prisma'
 import styles from './search.module.css'
 
 type PostWithDetails = Post & {

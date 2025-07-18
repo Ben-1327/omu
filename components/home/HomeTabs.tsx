@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import PostCard from '@/components/posts/PostCard'
-import { Post, User, Tag } from '@prisma/client'
+import { Post, User, Tag } from '@/types/prisma'
 import styles from './HomeTabs.module.css'
 
 type PostWithDetails = Post & {

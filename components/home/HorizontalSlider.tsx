@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import PostCard from '@/components/posts/PostCard'
-import { Post, User, Tag } from '@prisma/client'
+import { Post, User, Tag } from '@/types/prisma'
 import styles from './HorizontalSlider.module.css'
 
 interface HorizontalSliderProps {

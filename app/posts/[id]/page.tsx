@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { Post, User, Tag } from '@prisma/client'
+import { Post, User, Tag } from '@/types/prisma'
 import ReactMarkdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import Link from 'next/link'
@@ -419,12 +419,14 @@ export default function PostDetailPage() {
 
         <div className={styles.tags}>
           {post.postTags.map(({ tag }) => (
-            <span
-              key={tag.id}
-              className={styles.tag}
-            >
-              #{tag.name}
-            </span>
+            tag && (
+              <span
+                key={tag.id}
+                className={styles.tag}
+              >
+                #{tag.name}
+              </span>
+            )
           ))}
         </div>
           </article>
