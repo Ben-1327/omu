@@ -1,9 +1,7 @@
 {
   "env": {
-    "PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING": "1",
-    "PRISMA_CLI_BINARY_TARGETS": "native"
+    "SKIP_ENV_VALIDATION": "true"
   },
-  "installCommand": "PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 npm install",
   "buildCommand": "npm run build",
   "functions": {
     "app/api/**/*.ts": {
