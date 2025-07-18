@@ -2,6 +2,7 @@
   "env": {
     "SKIP_ENV_VALIDATION": "true"
   },
+  "installCommand": "npm install --ignore-scripts",
   "buildCommand": "npm run build",
   "functions": {
     "app/api/**/*.ts": {
