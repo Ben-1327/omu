@@ -456,28 +456,37 @@ export default function PostDetailPage() {
                     </span>
                   </div>
                 </div>
-                
-                {/* 編集・削除ボタン（著者または管理者のみ） */}
-                {session?.user?.id && (session.user.id === post.userId || session.user.isAdmin) && (
-                  <div className={styles.authorActions}>
-                    <button
-                      onClick={() => router.push(`/posts/${post.id}/edit`)}
-                      className={styles.authorEditButton}
-                    >
-                      <span className={styles.buttonIcon}>✏️</span>
-                      編集
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      className={styles.authorDeleteButton}
-                    >
-                      <span className={styles.buttonIcon}>🗑️</span>
-                      削除
-                    </button>
-                  </div>
-                )}
               </div>
             </Link>
+            
+            {/* 編集・削除ボタン（著者または管理者のみ） */}
+            {session?.user?.id && (session.user.id === post.userId || session.user.isAdmin) && (
+              <div className={styles.authorActions}>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    console.log('編集ボタンクリック:', post.id, `/posts/${post.id}/edit`)
+                    router.push(`/posts/${post.id}/edit`)
+                  }}
+                  className={styles.authorEditButton}
+                >
+                  <span className={styles.buttonIcon}>✏️</span>
+                  編集
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleDelete()
+                  }}
+                  className={styles.authorDeleteButton}
+                >
+                  <span className={styles.buttonIcon}>🗑️</span>
+                  削除
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 目次 */}

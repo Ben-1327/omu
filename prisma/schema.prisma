@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -126,8 +127,8 @@ model Follow {
   followedId  String  @map("followed_id")
   
   // Relations
-  follower    User    @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
-  followed    User    @relation("UserFollowing", fields: [followedId], references: [id], onDelete: Cascade)
+  follower    User    @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  followed    User    @relation("UserFollowers", fields: [followedId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followedId])
   @@map("follows")

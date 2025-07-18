@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import PostCard from '@/components/posts/PostCard'
 import { Post, User, Tag } from '@prisma/client'
 import styles from './ProfileTabs.module.css'
@@ -25,19 +26,63 @@ export default function ProfileTabs({ userId }: ProfileTabsProps) {
   const [activeTab, setActiveTab] = useState<'posts' | 'bookmarks' | 'followers' | 'following'>('posts')
   const [posts, setPosts] = useState<PostWithDetails[]>([])
   const [bookmarks, setBookmarks] = useState<PostWithDetails[]>([])
-  const [followers, setFollowers] = useState<{id: string, username: string, email?: string}[]>([])
-  const [following, setFollowing] = useState<{id: string, username: string, email?: string}[]>([])
+  const [followers, setFollowers] = useState<{id: string, username: string, userId: string, email?: string}[]>([])
+  const [following, setFollowing] = useState<{id: string, username: string, userId: string, email?: string}[]>([])
   const [loading, setLoading] = useState(true)
 
   const targetUserId = userId || session?.user?.id
 
   useEffect(() => {
     if (targetUserId) {
-      fetchData()
+      fetchAllData()
     }
-  }, [targetUserId, activeTab])
+  }, [targetUserId])
 
-  const fetchData = async () => {
+  useEffect(() => {
+    if (targetUserId && activeTab !== 'posts' && activeTab !== 'bookmarks') {
+      // フォロワー・フォロー中の場合は既に読み込み済みなので何もしない
+      return
+    }
+    if (targetUserId) {
+      fetchSpecificData()
+    }
+  }, [activeTab])
+
+  const fetchAllData = async () => {
+    setLoading(true)
+    try {
+      // 全てのデータを並行して取得
+      const [postsRes, bookmarksRes, followersRes, followingRes] = await Promise.all([
+        fetch(`/api/users/${targetUserId}/posts`),
+        fetch(`/api/users/${targetUserId}/favorites`),
+        fetch(`/api/users/${targetUserId}/followers`),
+        fetch(`/api/users/${targetUserId}/following`)
+      ])
+
+      if (postsRes.ok) {
+        const postsData = await postsRes.json()
+        setPosts(postsData)
+      }
+      if (bookmarksRes.ok) {
+        const bookmarksData = await bookmarksRes.json()
+        setBookmarks(bookmarksData)
+      }
+      if (followersRes.ok) {
+        const followersData = await followersRes.json()
+        setFollowers(followersData)
+      }
+      if (followingRes.ok) {
+        const followingData = await followingRes.json()
+        setFollowing(followingData)
+      }
+    } catch (error) {
+      console.error('データ取得エラー:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchSpecificData = async () => {
     setLoading(true)
     try {
       let response
@@ -56,20 +101,6 @@ export default function ProfileTabs({ userId }: ProfileTabsProps) {
             setBookmarks(data)
           }
           break
-        case 'followers':
-          response = await fetch(`/api/users/${targetUserId}/followers`)
-          if (response.ok) {
-            const data = await response.json()
-            setFollowers(data)
-          }
-          break
-        case 'following':
-          response = await fetch(`/api/users/${targetUserId}/following`)
-          if (response.ok) {
-            const data = await response.json()
-            setFollowing(data)
-          }
-          break
       }
     } catch (error) {
       console.error('データ取得エラー:', error)
@@ -82,7 +113,7 @@ export default function ProfileTabs({ userId }: ProfileTabsProps) {
     { id: 'posts', label: '投稿', count: posts.length },
     { id: 'bookmarks', label: 'ブックマーク', count: bookmarks.length },
     { id: 'followers', label: 'フォロワー', count: followers.length },
-    { id: 'following', label: 'フォロー中', count: following.length }
+    { id: 'following', label: 'フォロー', count: following.length }
   ]
 
   if (loading && activeTab === 'posts') {
@@ -163,17 +194,17 @@ export default function ProfileTabs({ userId }: ProfileTabsProps) {
                   </div>
                 ) : (
                   followers.map((user) => (
-                    <div key={user.id} className={styles.userCard}>
+                    <Link key={user.id} href={`/users/${user.id}`} className={styles.userCard}>
                       <div className={styles.userHeader}>
                         <div className={styles.userAvatar}>
                           {user.username?.[0]?.toUpperCase() || 'U'}
                         </div>
                         <div className={styles.userInfo}>
                           <div className={styles.userName}>{user.username}</div>
-                          <div className={styles.userHandle}>@{user.username}</div>
+                          <div className={styles.userHandle}>@{user.userId}</div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))
                 )}
               </div>
@@ -183,21 +214,21 @@ export default function ProfileTabs({ userId }: ProfileTabsProps) {
               <div className={styles.usersGrid}>
                 {following.length === 0 ? (
                   <div className={styles.empty}>
-                    <p>フォロー中のユーザーがいません</p>
+                    <p>フォローしているユーザーがいません</p>
                   </div>
                 ) : (
                   following.map((user) => (
-                    <div key={user.id} className={styles.userCard}>
+                    <Link key={user.id} href={`/users/${user.id}`} className={styles.userCard}>
                       <div className={styles.userHeader}>
                         <div className={styles.userAvatar}>
                           {user.username?.[0]?.toUpperCase() || 'U'}
                         </div>
                         <div className={styles.userInfo}>
                           <div className={styles.userName}>{user.username}</div>
-                          <div className={styles.userHandle}>@{user.username}</div>
+                          <div className={styles.userHandle}>@{user.userId}</div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))
                 )}
               </div>
