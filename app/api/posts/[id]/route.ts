@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(
   request: NextRequest,
@@ -74,7 +75,7 @@ export async function PUT(
     }
 
     // トランザクション処理
-    const updatedPost = await prisma.$transaction(async (tx) => {
+    const updatedPost = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // 投稿更新
       const post = await tx.post.update({
         where: { id: parseInt(resolvedParams.id) },
