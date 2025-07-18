@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
 
     // トランザクション処理
     console.log('トランザクション開始')
-    const post = await prisma.$transaction(async (prisma) => {
+    const post = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // 投稿作成
       const postData = {
         userId: session.user.id,
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
       
       console.log('投稿データ作成:', postData)
       
-      const newPost = await prisma.post.create({
+      const newPost = await tx.post.create({
         data: postData,
         include: {
           user: {
@@ -132,7 +133,7 @@ export async function POST(request: NextRequest) {
           if (tagName && tagName.trim()) {
             console.log('タグを処理中:', tagName)
             // タグを取得または作成
-            const tag = await prisma.tag.upsert({
+            const tag = await tx.tag.upsert({
               where: { name: tagName },
               update: {},
               create: { name: tagName }
@@ -141,7 +142,7 @@ export async function POST(request: NextRequest) {
             console.log('タグ作成成功:', tag)
 
             // 投稿とタグを関連付け
-            await prisma.postTag.create({
+            await tx.postTag.create({
               data: {
                 postId: newPost.id,
                 tagId: tag.id
