@@ -1,4 +1,7 @@
 {
+  "env": {
+    "PRISMA_CLI_BINARY_TARGETS": "rhel-openssl-3.0.x"
+  },
   "buildCommand": "npm run build",
   "functions": {
     "app/api/**/*.ts": {
