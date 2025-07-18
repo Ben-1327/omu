@@ -2,6 +2,8 @@
 
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
+import Image from 'next/image'
+import './Header.css'
 
 export default function Header() {
   const { data: session } = useSession()
@@ -11,18 +13,26 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900">
-              omu
+            <Link href="/" className="header-logo-link">
+              <Image 
+                src="/omu_logo.png" 
+                alt="omu logo" 
+                width={48} 
+                height={48}
+                className="header-logo"
+              />
             </Link>
           </div>
           
           <nav className="flex items-center space-x-4">
-            <Link 
-              href="/posts/new" 
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              投稿
-            </Link>
+            {session && (
+              <Link 
+                href="/posts/new" 
+                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                投稿
+              </Link>
+            )}
             <Link 
               href="/search" 
               className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"

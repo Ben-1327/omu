@@ -16,6 +16,8 @@ export default function SignUpPage() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,6 +28,13 @@ export default function SignUpPage() {
     // パスワード確認
     if (formData.password !== formData.confirmPassword) {
       setError('パスワードが一致しません')
+      setLoading(false)
+      return
+    }
+
+    // 利用規約・プライバシーポリシーの同意確認
+    if (!termsAccepted || !privacyAccepted) {
+      setError('利用規約とプライバシーポリシーに同意してください')
       setLoading(false)
       return
     }
@@ -201,10 +210,44 @@ export default function SignUpPage() {
             </div>
           </div>
 
+          <div className={styles.consentSection}>
+            <div className={styles.consentItem}>
+              <input
+                id="terms"
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <label htmlFor="terms" className={styles.checkboxLabel}>
+                <Link href="/terms" target="_blank" className={styles.link}>
+                  利用規約
+                </Link>
+                に同意します
+              </label>
+            </div>
+
+            <div className={styles.consentItem}>
+              <input
+                id="privacy"
+                type="checkbox"
+                checked={privacyAccepted}
+                onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <label htmlFor="privacy" className={styles.checkboxLabel}>
+                <Link href="/privacy" target="_blank" className={styles.link}>
+                  プライバシーポリシー
+                </Link>
+                に同意します
+              </label>
+            </div>
+          </div>
+
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !termsAccepted || !privacyAccepted}
               className={styles.submitButton}
             >
               {loading ? '登録中...' : '新規登録'}

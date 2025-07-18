@@ -45,7 +45,7 @@ export default function Footer() {
     
     <div className="mt-8 pt-8 border-t border-gray-200 ">
      <p className="text-center text-sm text-gray-600 ">
-      © 2024 omu. All rights reserved.
+      © 2025 omu. All rights reserved.
      </p>
     </div>
    </div>
