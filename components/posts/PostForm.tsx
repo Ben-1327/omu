@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import TagInput from '@/components/ui/TagInput'
+import { ImageUpload } from '@/components/ui/ImageUpload'
+import { ImageUploadResult } from '@/lib/image-upload'
 import styles from './PostForm.module.css'
 import remarkBreaks from 'remark-breaks'
 
@@ -92,6 +94,21 @@ export default function PostForm() {
       ...prev,
       tags
     }))
+  }
+
+  const handleImageUpload = (result: ImageUploadResult) => {
+    if (result.success && result.url) {
+      // Markdownの画像形式でコンテンツに挿入
+      const imageMarkdown = `![画像](${result.url})`
+      setFormData(prev => ({
+        ...prev,
+        content: prev.content + '\n\n' + imageMarkdown
+      }))
+    }
+  }
+
+  const handleImageUploadError = (error: string) => {
+    alert('画像のアップロードに失敗しました: ' + error)
   }
 
   if (!session) {
@@ -232,14 +249,42 @@ export default function PostForm() {
           </>
         ) : (
           /* 記事投稿の場合の従来レイアウト */
-          <div className={styles.section}>
-            <div className={styles.editorHeader}>
+          <>
+            {/* 画像アップロード（記事投稿の場合のみ） */}
+            <div className={styles.section}>
               <label className={styles.sectionLabel}>
-                本文
-                <span className={styles.characterCount}>
-                  {formData.content.length} 文字
-                </span>
+                画像アップロード
               </label>
+              <div className={styles.imageUploadContainer}>
+                <ImageUpload
+                  onUploadComplete={handleImageUpload}
+                  onError={handleImageUploadError}
+                  options={{
+                    bucket: 'post-images',
+                    userId: session?.user?.id,
+                    maxWidth: 1200,
+                    maxHeight: 800,
+                    quality: 0.85,
+                    format: 'webp'
+                  }}
+                  className={styles.imageUpload}
+                  placeholder="画像をアップロードしてMarkdownに挿入"
+                  showPreview={false}
+                />
+                <p className={styles.uploadHint}>
+                  アップロードした画像は自動的に本文に挿入されます
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.section}>
+              <div className={styles.editorHeader}>
+                <label className={styles.sectionLabel}>
+                  本文
+                  <span className={styles.characterCount}>
+                    {formData.content.length} 文字
+                  </span>
+                </label>
             <div className={styles.editorModeToggle}>
               <button
                 type="button"
@@ -284,6 +329,7 @@ export default function PostForm() {
             />
           </div>
           </div>
+          </>
         )}
 
         {/* タグ */}

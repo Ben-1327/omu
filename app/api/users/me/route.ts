@@ -19,6 +19,7 @@ export async function GET() {
         userId: true,
         email: true,
         image: true,
+        profileImageUrl: true,
         createdAt: true,
         isAdmin: true,
         _count: {
@@ -50,7 +51,7 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const { username, userId } = await request.json()
+    const { username, userId, profileImageUrl } = await request.json()
 
     // バリデーション
     if (!username || username.trim().length < 2) {
@@ -96,6 +97,7 @@ export async function PUT(request: NextRequest) {
       data: {
         username: username.trim(),
         userId: userId.trim(),
+        profileImageUrl: profileImageUrl || null,
         updatedAt: new Date()
       },
       select: {
@@ -104,6 +106,7 @@ export async function PUT(request: NextRequest) {
         userId: true,
         email: true,
         image: true,
+        profileImageUrl: true,
         createdAt: true,
         isAdmin: true,
         _count: {

@@ -14,6 +14,9 @@ services:
       # Supabase接続文字列（Transaction pooler + Session pooler）
       DATABASE_URL: "postgresql://postgres.nnfwnybihekdmwuwitwy:omu-1327@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&pool_timeout=30&connection_limit=5"
       DIRECT_URL: "postgresql://postgres.nnfwnybihekdmwuwitwy:omu-1327@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres"
+      # Supabase Client (for Storage and other client features)
+      NEXT_PUBLIC_SUPABASE_URL: "https://nnfwnybihekdmwuwitwy.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "sb_publishable_s4nyf129ii6BFIda41rkfw_qEnV61_v"
       NEXTAUTH_URL: "http://localhost:3000"
       NEXTAUTH_SECRET: "DiJeEE2tTa5QkzjXpFHkNznrer9vzitf9qlw+g7PYX8="
     volumes:

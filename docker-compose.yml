@@ -35,6 +35,10 @@ services:
       NEXTAUTH_URL: "http://localhost:3000"
       NEXTAUTH_SECRET: "DiJeEE2tTa5QkzjXpFHkNznrer9vzitf9qlw+g7PYX8="
       
+      # Supabase設定（実際の値に置き換えてください）
+      NEXT_PUBLIC_SUPABASE_URL: "${NEXT_PUBLIC_SUPABASE_URL:-https://your-project-ref.supabase.co}"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "${NEXT_PUBLIC_SUPABASE_ANON_KEY:-your-anon-key}"
+      
       # OAuth設定（本番環境では適切な値に変更してください）
       GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID:-your-google-client-id}"
       GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET:-your-google-client-secret}"

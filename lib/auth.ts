@@ -7,7 +7,7 @@ import { prisma } from './prisma'
 import bcrypt from 'bcryptjs'
 import type { JWT } from 'next-auth/jwt'
 import type { Session } from 'next-auth'
-import type { Account, Profile } from 'next-auth'
+import type { Account, Profile, User } from 'next-auth'
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -63,7 +63,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }: { user: any; account: Account | null; profile?: Profile }) {
+    async signIn({ user, account, profile }: { user: User; account: Account | null; profile?: Profile }) {
       if (account?.provider === 'google' || account?.provider === 'github') {
         try {
           const existingUser = await prisma.user.findUnique({
@@ -141,9 +141,12 @@ export const authOptions = {
     },
     async session({ session, token }: { session: Session; token?: JWT }) {
       if (token) {
-        (session.user as { id: string; isAdmin: boolean; userId: string }).id = token.sub as string
-        (session.user as { id: string; isAdmin: boolean; userId: string }).isAdmin = token.isAdmin as boolean
-        (session.user as { id: string; isAdmin: boolean; userId: string }).userId = token.userId as string
+        session.user = {
+          ...session.user,
+          id: token.sub as string,
+          isAdmin: token.isAdmin as boolean,
+          userId: token.userId as string
+        } as Session['user'] & { id: string; isAdmin: boolean; userId: string }
       }
       return session
     },

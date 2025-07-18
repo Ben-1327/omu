@@ -283,6 +283,27 @@
   margin-bottom: 0.25rem !important;
 }
 
+/* 画像アップロード */
+.imageUploadContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.imageUpload {
+  max-width: 400px;
+  width: 100%;
+}
+
+.uploadHint {
+  font-size: 0.875rem;
+  color: #718096;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+}
+
 /* Submit Section */
 .submitSection {
   margin-top: 2rem;

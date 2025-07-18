@@ -1,0 +1,241 @@
+/* OptimizedImage コンポーネント用のスタイル */
+
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.loading {
+  opacity: 0;
+}
+
+.loaded {
+  opacity: 1;
+}
+
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  min-height: 200px;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.fallbackIcon {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.fallbackText {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  z-index: 10;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  animation: spin 1s linear infinite;
+  color: #9ca3af;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* プロフィール画像専用スタイル */
+.profileContainer {
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+
+.profileFallback {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.profileImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* サイズ別スタイル */
+.sizeSmall {
+  width: 2rem;
+  height: 2rem;
+}
+
+.sizeMedium {
+  width: 3rem;
+  height: 3rem;
+}
+
+.sizeLarge {
+  width: 4rem;
+  height: 4rem;
+}
+
+.sizeXLarge {
+  width: 6rem;
+  height: 6rem;
+}
+
+.sizeSmall .profileFallback {
+  font-size: 0.75rem;
+}
+
+.sizeMedium .profileFallback {
+  font-size: 1rem;
+}
+
+.sizeLarge .profileFallback {
+  font-size: 1.25rem;
+}
+
+.sizeXLarge .profileFallback {
+  font-size: 1.5rem;
+}
+
+/* 投稿画像専用スタイル */
+.postImage {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+}
+
+.postImageContainer {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+/* ホバー効果 */
+.postImage:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  .fallback {
+    min-height: 150px;
+  }
+  
+  .fallbackIcon {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .fallbackText {
+    font-size: 0.75rem;
+  }
+  
+  .sizeXLarge {
+    width: 4rem;
+    height: 4rem;
+  }
+  
+  .sizeLarge {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .fallback {
+    background-color: #374151;
+    color: #d1d5db;
+  }
+  
+  .loadingOverlay {
+    background-color: #374151;
+  }
+  
+  .spinner {
+    color: #d1d5db;
+  }
+}
+
+/* アニメーション */
+.fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.slideIn {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* アクセシビリティ */
+.container:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 低速回線対応 */
+@media (prefers-reduced-motion: reduce) {
+  .image,
+  .postImage {
+    transition: none;
+  }
+  
+  .spinner {
+    animation: none;
+  }
+  
+  .fadeIn,
+  .slideIn {
+    animation: none;
+  }
+}

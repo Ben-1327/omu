@@ -1,0 +1,176 @@
+/* ImageUpload コンポーネント用のスタイル */
+
+.uploadContainer {
+  position: relative;
+}
+
+.dropArea {
+  position: relative;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #f9fafb;
+}
+
+.dropArea:hover {
+  border-color: #9ca3af;
+  background-color: #f3f4f6;
+}
+
+.dropAreaDragging {
+  border-color: #60a5fa;
+  background-color: #eff6ff;
+}
+
+.dropAreaUploading {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.previewContainer {
+  margin-bottom: 1rem;
+}
+
+.previewImage {
+  max-width: 100%;
+  max-height: 12rem;
+  margin: 0 auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.uploadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  height: 2rem;
+  width: 2rem;
+  border: 2px solid transparent;
+  border-bottom: 2px solid #3b82f6;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.uploadContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.uploadIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #9ca3af;
+}
+
+.uploadText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.uploadHint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.uploadingText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.errorContainer {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.375rem;
+}
+
+.errorText {
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  .dropArea {
+    padding: 1rem;
+  }
+  
+  .previewImage {
+    max-height: 8rem;
+  }
+  
+  .uploadIcon {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .uploadText {
+    font-size: 0.8125rem;
+  }
+  
+  .uploadHint {
+    font-size: 0.6875rem;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .dropArea {
+    border-color: #4b5563;
+    background-color: #1f2937;
+  }
+  
+  .dropArea:hover {
+    border-color: #6b7280;
+    background-color: #374151;
+  }
+  
+  .dropAreaDragging {
+    border-color: #60a5fa;
+    background-color: #1e3a8a;
+  }
+  
+  .uploadIcon {
+    color: #6b7280;
+  }
+  
+  .uploadText {
+    color: #d1d5db;
+  }
+  
+  .uploadHint {
+    color: #9ca3af;
+  }
+  
+  .uploadingText {
+    color: #d1d5db;
+  }
+  
+  .errorContainer {
+    background-color: #450a0a;
+    border-color: #dc2626;
+  }
+  
+  .errorText {
+    color: #f87171;
+  }
+}

@@ -3,6 +3,8 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ImageUpload } from '@/components/ui/ImageUpload'
+import { ImageUploadResult } from '@/lib/image-upload'
 import styles from './settings.module.css'
 
 interface User {
@@ -11,6 +13,7 @@ interface User {
   userId: string
   email: string
   image?: string
+  profileImageUrl?: string
   createdAt: string
   isAdmin: boolean
   _count: {
@@ -32,6 +35,7 @@ export default function SettingsPage() {
     username: '',
     userId: ''
   })
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -54,6 +58,7 @@ export default function SettingsPage() {
           username: userData.username,
           userId: userData.userId
         })
+        setProfileImageUrl(userData.profileImageUrl || null)
       } else {
         setError('ユーザー情報の取得に失敗しました')
       }
@@ -77,7 +82,10 @@ export default function SettingsPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          profileImageUrl
+        }),
       })
 
       const data = await response.json()
@@ -110,6 +118,17 @@ export default function SettingsPage() {
     }))
   }
 
+  const handleImageUpload = (result: ImageUploadResult) => {
+    if (result.success && result.url) {
+      setProfileImageUrl(result.url)
+      setSuccess('プロフィール画像をアップロードしました')
+    }
+  }
+
+  const handleImageUploadError = (error: string) => {
+    setError(error)
+  }
+
   if (loading) {
     return (
       <div className={styles.container}>
@@ -139,7 +158,17 @@ export default function SettingsPage() {
           
           <div className={styles.profileInfo}>
             <div className={styles.avatar}>
-              {user.username?.[0]?.toUpperCase() || 'U'}
+              {(profileImageUrl || user.image) ? (
+                <img 
+                  src={profileImageUrl || user.image} 
+                  alt={`${user.username}のプロフィール画像`}
+                  className={styles.avatarImage}
+                />
+              ) : (
+                <span className={styles.avatarInitial}>
+                  {user.username?.[0]?.toUpperCase() || 'U'}
+                </span>
+              )}
             </div>
             <div className={styles.basicInfo}>
               <p className={styles.email}>{user.email}</p>
@@ -179,6 +208,27 @@ export default function SettingsPage() {
             {success && (
               <div className={styles.successMessage}>{success}</div>
             )}
+
+            <div className={styles.field}>
+              <label className={styles.label}>
+                プロフィール画像
+              </label>
+              <ImageUpload
+                onUploadComplete={handleImageUpload}
+                onError={handleImageUploadError}
+                options={{
+                  bucket: 'profile-images',
+                  userId: user.id,
+                  maxWidth: 400,
+                  maxHeight: 400,
+                  quality: 0.8,
+                  format: 'webp'
+                }}
+                className={styles.imageUpload}
+                currentImageUrl={profileImageUrl || user.image}
+                placeholder="プロフィール画像をアップロード"
+              />
+            </div>
 
             <div className={styles.field}>
               <label htmlFor="username" className={styles.label}>
