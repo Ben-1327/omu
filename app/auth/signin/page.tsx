@@ -143,6 +143,7 @@ function SignInForm() {
             </button>
           </div>
 
+          {/* OAuth認証ボタンは一時的に非表示
           <div className={styles.divider}>
             <div className={styles.dividerLine} />
             <div className={styles.dividerText}>
@@ -178,6 +179,7 @@ function SignInForm() {
               <span>GitHub</span>
             </button>
           </div>
+          */}
         </form>
       </div>
     </div>

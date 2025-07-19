@@ -29,7 +29,8 @@ export default function PrivacyPage() {
             <li>投稿データ: 記事・プロンプト・会話履歴の内容、タイトル、説明文</li>
             <li>OAuth認証情報: Google/GitHub認証時の基本情報（ユーザー名、メールなど）</li>
             <li>利用データ: 投稿の閲覧数、いいね、フォロー関係、お気に入り</li>
-            <li>システムデータ: 作成日時、更新日時、セッション情報、IPアドレス、アクセスログ</li>
+            <li>システムデータ: 作成日時、更新日時、セッション情報、IPアドレス（匿名化）、アクセスログ</li>
+            <li>アクセス解析データ: Google Analytics 4およびVercel Analyticsによる匿名化されたサイト利用統計（ページビュー、滞在時間、リファラー情報等）</li>
           </ul>
         </section>
 
@@ -38,6 +39,7 @@ export default function PrivacyPage() {
           <ul className={styles.list}>
             <li>本サービスの提供（投稿共有、ユーザー認証、通知）</li>
             <li>改善・分析（匿名化データを使用したサービス向上）</li>
+            <li>サイト利用状況の分析（Google Analytics 4、Vercel Analyticsによる匿名化統計分析）</li>
             <li>法令遵守、問い合わせ対応、セキュリティ対策</li>
             <li>将来的な広告配信や有料機能の実装時、利用者の嗜好分析（同意取得後）</li>
           </ul>
@@ -47,6 +49,7 @@ export default function PrivacyPage() {
           <h2 className={styles.sectionTitle}>4. 情報の共有と開示</h2>
           <ul className={styles.list}>
             <li>第三者共有: 生成AIプロバイダー（例: Google API）との連携時、必要最小限の情報を共有（同意取得）。ユーザー生成コンテンツは、共有相手に公開される可能性あり</li>
+            <li>アクセス解析サービス: Google LLC（Google Analytics 4）およびVercel Inc.（Vercel Analytics）に匿名化されたサイト利用統計を提供。IPアドレスは匿名化されており、個人を特定できる情報は含まれません</li>
             <li>開示: 法令に基づく場合、または利用者の同意がある場合のみ</li>
             <li>投稿データは公開設定に基づき、他の利用者に表示されます。注意喚起: 投稿前に個人情報を含めないようお願いします</li>
           </ul>
@@ -74,7 +77,10 @@ export default function PrivacyPage() {
           <h2 className={styles.sectionTitle}>7. Cookieとトラッキング</h2>
           <ul className={styles.list}>
             <li>セッション管理、利用分析にCookieを使用。拒否可能ですが、機能制限が発生する可能性あり</li>
-            <li>第三者ツール（Google Analyticsなど）は使用せず、内部ログのみ</li>
+            <li>Google Analytics 4: 匿名化されたサイト利用統計の収集にファーストパーティCookieを使用。IPアドレスは自動的に匿名化され、個人を特定する情報は収集されません</li>
+            <li>Vercel Analytics: 匿名化されたパフォーマンス統計を収集。個人を特定する情報は含まれません</li>
+            <li>Cookie設定: ブラウザ設定でCookieを無効化できますが、サービスの一部機能が制限される場合があります</li>
+            <li>開発者IP除外: 運営者のIPアドレスはアクセス解析から除外されます</li>
           </ul>
         </section>
 
@@ -101,6 +107,7 @@ export default function PrivacyPage() {
 
         <div className={styles.footer}>
           <p>制定日: 2025年7月19日</p>
+          <p>最終更新日: 2025年7月19日（Google Analytics・Vercel Analytics追加）</p>
         </div>
       </div>
     </main>

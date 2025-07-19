@@ -252,6 +252,7 @@ export default function SignUpPage() {
             </button>
           </div>
 
+          {/* OAuth認証ボタンは一時的に非表示
           <div className={styles.divider}>
             <div className={styles.dividerLine} />
             <div className={styles.dividerText}>
@@ -287,6 +288,7 @@ export default function SignUpPage() {
               <span>GitHub</span>
             </button>
           </div>
+          */}
         </form>
       </div>
     </div>

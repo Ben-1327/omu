@@ -106,6 +106,34 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000) にアクセスしてください。
 
+## Analytics設定
+
+本プロジェクトはGoogle Analytics 4とVercel Analyticsを使用しています。
+
+### 環境変数の設定
+
+```bash
+# Google Analytics
+NEXT_PUBLIC_GA_TRACKING_ID="G-XXXXXXXXXX"
+
+# IP除外設定（開発者IPアドレス）
+EXCLUDED_IPS="127.0.0.1,::1,182.170.137.238"
+```
+
+### 特徴
+
+- **Google Analytics 4**: IPアドレス自動匿名化、GDPR準拠
+- **Vercel Analytics**: 軽量なパフォーマンス分析
+- **IP除外**: 開発者のIPアドレス（182.170.137.238）は分析から除外
+- **プライバシー保護**: 個人を特定できる情報は収集されません
+
+### 設定手順
+
+1. Google Analyticsアカウントを作成
+2. GA4プロパティを作成してトラッキングIDを取得
+3. VercelプロジェクトでAnalytics機能を有効化
+4. 環境変数に設定値を追加
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

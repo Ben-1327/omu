@@ -8,6 +8,8 @@ import Footer from "@/components/layout/Footer";
 import LeftSidebar from "@/components/layout/LeftSidebar";
 // import RightSidebar from "@/components/layout/RightSidebar"; // 将来の拡張用
 import AuthProvider from "@/components/providers/SessionProvider";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import { Analytics } from '@vercel/analytics/react';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +46,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased min-h-screen flex flex-col`}
       >
+        <GoogleAnalytics />
         <AuthProvider>
           <Header />
           <div className="flex flex-1 max-w-7xl mx-auto w-full">
@@ -55,6 +58,7 @@ export default function RootLayout({
           </div>
           <Footer />
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
