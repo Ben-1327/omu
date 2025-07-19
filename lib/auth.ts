@@ -63,53 +63,66 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }: { user: User; account: Account | null; profile?: Profile }) {
+    async signIn({ user, account, profile, request }: { user: User; account: Account | null; profile?: Profile; request?: any }) {
       if (account?.provider === 'google' || account?.provider === 'github') {
         try {
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email as string }
           })
 
+          // リクエストからisSignUpパラメータを取得
+          const url = request?.url || ''
+          const isSignUp = url.includes('isSignUp=true') || url.includes('signup')
+
           if (!existingUser) {
-            // OAuth認証の場合、usernameを生成
-            let username = ''
-            if (account?.provider === 'google') {
-              username = (profile as { name?: string })?.name || user.name || user.email?.split('@')[0] || 'user'
-            } else if (account?.provider === 'github') {
-              username = (profile as { login?: string })?.login || user.name || user.email?.split('@')[0] || 'user'
-            }
-            
-            // usernameの重複を回避
-            let finalUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '')
-            let counter = 1
-            while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
-              finalUsername = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}${counter}`
-              counter++
-            }
-
-            // userIdの重複を回避（usernameと同じ値を使用）
-            let finalUserId = finalUsername
-            let userIdCounter = 1
-            while (await prisma.user.findUnique({ where: { userId: finalUserId } })) {
-              finalUserId = `${finalUsername}${userIdCounter}`
-              userIdCounter++
-            }
-
-            // ユーザーを作成
-            await prisma.user.create({
-              data: {
-                id: user.id,
-                email: user.email as string,
-                username: finalUsername,
-                userId: finalUserId,
-                image: user.image,
-                emailVerified: new Date(),
-                isAdmin: false,
+            // サインアップページからの認証の場合のみ新規ユーザーを作成
+            if (isSignUp) {
+              // OAuth認証の場合、usernameを生成
+              let username = ''
+              if (account?.provider === 'google') {
+                username = (profile as { name?: string })?.name || user.name || user.email?.split('@')[0] || 'user'
+              } else if (account?.provider === 'github') {
+                username = (profile as { login?: string })?.login || user.name || user.email?.split('@')[0] || 'user'
               }
-            })
+              
+              // usernameの重複を回避
+              let finalUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '')
+              let counter = 1
+              while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
+                finalUsername = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}${counter}`
+                counter++
+              }
+
+              // userIdの重複を回避（usernameと同じ値を使用）
+              let finalUserId = finalUsername
+              let userIdCounter = 1
+              while (await prisma.user.findUnique({ where: { userId: finalUserId } })) {
+                finalUserId = `${finalUsername}${userIdCounter}`
+                userIdCounter++
+              }
+
+              // ユーザーを作成
+              await prisma.user.create({
+                data: {
+                  id: user.id,
+                  email: user.email as string,
+                  username: finalUsername,
+                  userId: finalUserId,
+                  image: user.image,
+                  emailVerified: new Date(),
+                  isAdmin: false,
+                }
+              })
+            } else {
+              // ログインページからの認証でアカウントが存在しない場合はエラー
+              throw new Error('ACCOUNT_NOT_FOUND')
+            }
           }
         } catch (error) {
-          console.error('OAuth user creation error:', error)
+          console.error('OAuth authentication error:', error)
+          if (error instanceof Error && error.message === 'ACCOUNT_NOT_FOUND') {
+            return '/auth/signin?error=AccountNotFound'
+          }
           return false
         }
       }

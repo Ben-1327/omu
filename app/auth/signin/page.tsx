@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn, getSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import styles from './signin.module.css'
 
@@ -14,6 +14,14 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const errorParam = searchParams.get('error')
+    if (errorParam === 'AccountNotFound') {
+      setError('アカウントが見つかりません。新規登録をしてください。')
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,7 +41,7 @@ export default function SignInPage() {
         // セッションを確認してからリダイレクト
         const session = await getSession()
         if (session) {
-          router.push('/')
+          router.push('/profile')
         }
       }
     } catch {
@@ -48,16 +56,20 @@ export default function SignInPage() {
     setError('')
     try {
       const result = await signIn(provider, { 
-        callbackUrl: '/',
+        callbackUrl: '/profile',
         redirect: false 
       })
       
       if (result?.error) {
-        setError(`${provider === 'google' ? 'Google' : 'GitHub'}認証に失敗しました`)
+        if (result.error.includes('AccountNotFound')) {
+          setError('アカウントが見つかりません。新規登録をしてください。')
+        } else {
+          setError(`${provider === 'google' ? 'Google' : 'GitHub'}認証に失敗しました`)
+        }
         setLoading(false)
       } else if (result?.ok) {
         // 認証成功時は自動的にリダイレクト
-        window.location.href = result.url || '/'
+        window.location.href = result.url || '/profile'
       }
     } catch (error) {
       console.error('OAuth sign in error:', error)

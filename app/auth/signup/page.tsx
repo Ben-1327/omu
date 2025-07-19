@@ -67,7 +67,7 @@ export default function SignUpPage() {
           console.error('Sign in error:', result.error)
           setError(`登録は完了しましたが、ログインに失敗しました: ${result.error}`)
         } else {
-          router.push('/')
+          router.push('/profile')
         }
       } else {
         console.error('Registration error:', data)
@@ -85,7 +85,7 @@ export default function SignUpPage() {
     setError('')
     try {
       const result = await signIn(provider, { 
-        callbackUrl: '/',
+        callbackUrl: '/profile?isSignUp=true',
         redirect: false 
       })
       
@@ -94,7 +94,7 @@ export default function SignUpPage() {
         setLoading(false)
       } else if (result?.ok) {
         // 認証成功時は自動的にリダイレクト
-        window.location.href = result.url || '/'
+        window.location.href = result.url || '/profile'
       }
     } catch (error) {
       console.error('OAuth sign in error:', error)
