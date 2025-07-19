@@ -84,17 +84,15 @@ export default function SignUpPage() {
     setLoading(true)
     setError('')
     try {
+      // サインアップページからのOAuth認証であることを明示
       const result = await signIn(provider, { 
-        callbackUrl: '/profile?isSignUp=true',
-        redirect: false 
+        callbackUrl: `/api/auth/callback/${provider}?isSignUp=true&redirect=/profile`,
+        redirect: true
       })
       
       if (result?.error) {
         setError(`${provider === 'google' ? 'Google' : 'GitHub'}認証に失敗しました`)
         setLoading(false)
-      } else if (result?.ok) {
-        // 認証成功時は自動的にリダイレクト
-        window.location.href = result.url || '/profile'
       }
     } catch (error) {
       console.error('OAuth sign in error:', error)

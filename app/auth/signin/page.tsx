@@ -55,11 +55,13 @@ function SignInForm() {
     setLoading(true)
     setError('')
     try {
+      // ログインページからのOAuth認証であることを明示（isSignUp=falseまたはパラメータなし）
       const result = await signIn(provider, { 
         callbackUrl: '/profile',
-        redirect: false 
+        redirect: true
       })
       
+      // redirect: trueの場合、通常はここには到達しないが、エラーの場合は到達する可能性がある
       if (result?.error) {
         if (result.error.includes('AccountNotFound')) {
           setError('アカウントが見つかりません。新規登録をしてください。')
@@ -67,9 +69,6 @@ function SignInForm() {
           setError(`${provider === 'google' ? 'Google' : 'GitHub'}認証に失敗しました`)
         }
         setLoading(false)
-      } else if (result?.ok) {
-        // 認証成功時は自動的にリダイレクト
-        window.location.href = result.url || '/profile'
       }
     } catch (error) {
       console.error('OAuth sign in error:', error)

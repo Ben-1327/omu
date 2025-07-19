@@ -70,9 +70,11 @@ export const authOptions = {
             where: { email: user.email as string }
           })
 
-          // リクエストからisSignUpパラメータを取得
+          // リクエストからisSignUpパラメータを取得（より厳密な判定）
           const url = request?.url || ''
-          const isSignUp = url.includes('isSignUp=true') || url.includes('signup')
+          const urlParams = new URLSearchParams(url.split('?')[1] || '')
+          const callbackUrl = urlParams.get('callbackUrl') || ''
+          const isSignUp = url.includes('isSignUp=true') || callbackUrl.includes('isSignUp=true') || url.includes('/auth/signup')
 
           if (!existingUser) {
             // サインアップページからの認証の場合のみ新規ユーザーを作成
@@ -86,10 +88,11 @@ export const authOptions = {
               }
               
               // usernameの重複を回避
-              let finalUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '')
+              let baseUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user'
+              let finalUsername = baseUsername
               let counter = 1
               while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
-                finalUsername = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}${counter}`
+                finalUsername = `${baseUsername}${counter}`
                 counter++
               }
 
@@ -113,10 +116,15 @@ export const authOptions = {
                   isAdmin: false,
                 }
               })
+              
+              console.log(`New user created: ${finalUsername} (${user.email})`)
             } else {
               // ログインページからの認証でアカウントが存在しない場合はエラー
-              throw new Error('ACCOUNT_NOT_FOUND')
+              console.log(`Account not found for login: ${user.email}`)
+              return '/auth/signin?error=AccountNotFound'
             }
+          } else {
+            console.log(`Existing user logged in: ${existingUser.username} (${user.email})`)
           }
         } catch (error) {
           console.error('OAuth authentication error:', error)
@@ -127,6 +135,22 @@ export const authOptions = {
         }
       }
       return true
+    },
+    async redirect({ url, baseUrl }) {
+      // サインアップ成功後は必ずプロフィールページへ
+      if (url.includes('isSignUp=true') || url.includes('redirect=/profile')) {
+        return `${baseUrl}/profile`
+      }
+      // 相対パスの場合はbaseUrlを付加
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`
+      }
+      // 同じドメインの場合はそのまま
+      if (new URL(url).origin === baseUrl) {
+        return url
+      }
+      // それ以外はbaseUrlを返す
+      return baseUrl
     },
     async jwt({ token, user }: { token: JWT; user?: unknown }) {
       if (user && typeof user === 'object' && user !== null) {
