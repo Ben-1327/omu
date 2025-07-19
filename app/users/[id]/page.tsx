@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { User, Post, Tag } from '@/types/prisma'
+import { User, Tag } from '@/types/prisma'
 import PostCard from '@/components/posts/PostCard'
 import FollowButton from '@/components/users/FollowButton'
 import { ProfileImage } from '@/components/ui/OptimizedImage'

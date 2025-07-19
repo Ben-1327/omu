@@ -25,7 +25,7 @@ interface User {
 }
 
 export default function SettingsPage() {
-  const { data: session, status, update } = useSession()
+  const { status, update } = useSession()
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)

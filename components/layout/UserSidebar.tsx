@@ -22,7 +22,7 @@ interface User {
 }
 
 export default function UserSidebar() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 

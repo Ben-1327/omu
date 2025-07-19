@@ -23,7 +23,7 @@ function SearchPageContent() {
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const [type, setType] = useState(searchParams.get('type') || 'all')
   const [sort, setSort] = useState(searchParams.get('sort') || 'new')
-  const [tag, setTag] = useState(searchParams.get('tag') || '')
+  const [tag] = useState(searchParams.get('tag') || '')
 
   const performSearch = useCallback(async () => {
     setLoading(true)

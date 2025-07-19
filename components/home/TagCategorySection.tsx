@@ -99,18 +99,6 @@ export default function TagCategorySection({ className }: TagCategorySectionProp
     }
   }
 
-  const getTypeText = (type: string) => {
-    switch (type) {
-      case 'article':
-        return '記事'
-      case 'prompt':
-        return 'プロンプト'
-      case 'conversation':
-        return '会話'
-      default:
-        return '投稿'
-    }
-  }
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString)

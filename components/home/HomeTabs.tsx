@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
 import PostCard from '@/components/posts/PostCard'
 import { Post, User, Tag } from '@/types/prisma'
 import styles from './HomeTabs.module.css'
@@ -17,7 +16,6 @@ type PostWithDetails = Post & {
 }
 
 export default function HomeTabs() {
-  const { data: session } = useSession()
   const [activeTab, setActiveTab] = useState<'timeline' | 'trending'>('timeline')
   const [posts, setPosts] = useState<PostWithDetails[]>([])
   const [loading, setLoading] = useState(true)

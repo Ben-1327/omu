@@ -20,24 +20,19 @@ export async function GET(request: Request) {
     }
 
     let orderBy = {};
-    let countField = '';
 
     switch (type) {
       case 'posts':
         orderBy = { posts: { _count: 'desc' } };
-        countField = 'posts';
         break;
       case 'likes':
         orderBy = { posts: { _count: 'desc' } }; // We'll calculate total likes separately
-        countField = 'likes';
         break;
       case 'followers':
         orderBy = { followers: { _count: 'desc' } };
-        countField = 'followers';
         break;
       default:
         orderBy = { posts: { _count: 'desc' } };
-        countField = 'posts';
     }
 
     if (type === 'likes') {

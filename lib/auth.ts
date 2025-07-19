@@ -88,7 +88,7 @@ export const authOptions = {
               }
               
               // usernameの重複を回避
-              let baseUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user'
+              const baseUsername = username.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user'
               let finalUsername = baseUsername
               let counter = 1
               while (await prisma.user.findUnique({ where: { username: finalUsername } })) {
