@@ -15,7 +15,7 @@ export function isExcludedIP(request: NextRequest): boolean {
   const realIP = request.headers.get('x-real-ip')
   const clientIP = request.headers.get('x-client-ip')
   
-  let ip = forwarded?.split(',')[0] || realIP || clientIP || request.ip
+  let ip = forwarded?.split(',')[0] || realIP || clientIP || undefined
   
   // IPv6ローカルアドレスの処理
   if (ip === '::1') {
