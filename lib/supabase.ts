@@ -69,3 +69,59 @@ export async function testStorageConnection() {
     return false
   }
 }
+
+// 画像アップロード関数
+export async function uploadImage(
+  file: File, 
+  bucket: 'profile-images' | 'post-images', 
+  userId: string
+) {
+  try {
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${userId}/${Date.now()}.${fileExt}`
+    
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, file)
+    
+    if (error) {
+      console.error('Upload error:', error)
+      return { success: false, error: error.message }
+    }
+    
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(fileName)
+    
+    return { 
+      success: true, 
+      url: urlData.publicUrl,
+      path: fileName 
+    }
+  } catch (error) {
+    console.error('Upload function error:', error)
+    return { success: false, error: 'アップロードに失敗しました' }
+  }
+}
+
+// 画像削除関数
+export async function deleteImage(
+  bucket: 'profile-images' | 'post-images',
+  filePath: string
+) {
+  try {
+    const { error } = await supabase.storage
+      .from(bucket)
+      .remove([filePath])
+    
+    if (error) {
+      console.error('Delete error:', error)
+      return { success: false, error: error.message }
+    }
+    
+    return { success: true }
+  } catch (error) {
+    console.error('Delete function error:', error)
+    return { success: false, error: '削除に失敗しました' }
+  }
+}
